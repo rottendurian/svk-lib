@@ -10,3 +10,9 @@
 [submodule "svklib/dep/glslang"]
 	path = svklib/dep/glslang
 	url = https://github.com/KhronosGroup/glslang.git
+[submodule "stb"]
+	path = stb
+	url = https://github.com/nothings/stb
+[submodule "svklib/dep/stb"]
+	path = svklib/dep/stb
+	url = https://github.com/nothings/stb
