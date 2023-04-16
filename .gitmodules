@@ -16,3 +16,6 @@
 [submodule "svklib/dep/stb"]
 	path = svklib/dep/stb
 	url = https://github.com/nothings/stb
+[submodule "svklib/dep/stp"]
+	path = svklib/dep/stp
+	url = https://github.com/rottendurian/SimpleThreadPool.git
