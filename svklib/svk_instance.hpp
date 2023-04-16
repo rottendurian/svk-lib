@@ -123,20 +123,20 @@ private:
 private:
     //VKDEVICE
     //sychronized queue class
+public:
     class svkqueue {
     private:
         friend class instance;
         VkQueue queue;
         std::mutex mutex;
-    public:
         svkqueue();
         svkqueue(VkQueue queue);
+    public:
         VkResult submit(uint32_t submitCount,const VkSubmitInfo* submitInfo, VkFence fence);
         VkResult submit(const VkSubmitInfo& submitInfo, VkFence fence);
         VkResult present(const VkPresentInfoKHR* presentInfo);
         VkResult waitIdle();
     };
-public:
     VkDevice device;
 
     svkqueue graphicsQueue;

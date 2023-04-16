@@ -108,7 +108,6 @@ int main() {
         0, 1, 2, 2, 3, 0,
         // 4, 5, 6, 6, 7, 4
     };
-    
 
     gllib::camera camera(45.f,0.001f,1000.f,800,600,glm::vec3(0.0f,0.0f,0.0f));
 
@@ -121,7 +120,7 @@ int main() {
         svklib::instance inst(win);
         svklib::swapchain swap(inst,3);
         svklib::graphics::pipeline pipeline(inst,swap);
-        svklib::compute::pipeline computePipeline(inst);
+        // svklib::compute::pipeline computePipeline(inst);
         svklib::renderer render(inst,swap,pipeline);
 
         std::atomic_bool textureImageComplete(false);

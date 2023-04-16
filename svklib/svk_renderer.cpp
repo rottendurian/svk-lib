@@ -5,46 +5,81 @@
 
 namespace svklib {
 
-renderer::renderer(instance &inst, swapchain& swap, graphics::pipeline &pipe) 
-    : inst(inst), swap(swap), pipe(pipe) 
+namespace queue {
+
+sync::sync(instance& inst, const int count)
+    : inst(inst), count(count)
 {
-    // createDrawCommandBuffer();
     createSyncObjects();
 }
 
-renderer::~renderer() {
-    
-    // vkFreeCommandBuffers(inst.device, commandPool->get(), drawCommandBuffer.size(), drawCommandBuffer.data());
-    
-    // vkDestroyCommandPool(inst.device, commandPool, nullptr);
-    // commandPool->returnPool();
-
-    for (int i = 0; i < pipe.swapChain.framesInFlight; i++) {
-        vkDestroySemaphore(inst.device, imageAvailableSemaphore[i], nullptr);
-        vkDestroySemaphore(inst.device, renderFinishedSemaphore[i], nullptr);
-        vkDestroyFence(inst.device, inFlightFence[i], nullptr);
-    }
-
+sync::~sync()
+{
+    destroySyncObjects();
 }
 
-// void renderer::createDrawCommandBuffer() {
-//     drawCommandBuffer.resize(pipe.swapChain.framesInFlight);
+void sync::syncFrame(const int frame)
+{
+    vkWaitForFences(inst.device, 1, &inFlightFence[frame], VK_TRUE, UINT64_MAX);
+    vkResetFences(inst.device, 1, &inFlightFence[frame]);
+    
+}
 
-//     VkCommandBufferAllocateInfo allocInfo{};
-//     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-//     allocInfo.commandPool = commandPool->get();
-//     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-//     allocInfo.commandBufferCount = (uint32_t)drawCommandBuffer.size();
+VkResult sync::acquireNextImage(const int frame, VkSwapchainKHR swapChain, uint32_t& imageIndex)
+{
+    return vkAcquireNextImageKHR(inst.device, swapChain, UINT64_MAX, imageAvailableSemaphore[frame], VK_NULL_HANDLE, &imageIndex);
+}
 
-//     if (vkAllocateCommandBuffers(inst.device, &allocInfo, drawCommandBuffer.data()) != VK_SUCCESS) {
-//         throw std::runtime_error("failed to allocate command buffers!");
-//     }
-// }
+void sync::submitFrame(const int frame, const uint32_t commandBufferCount, VkCommandBuffer* commandBuffers, instance::svkqueue& queue) 
+{
+    VkSubmitInfo submitInfo{};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-void renderer::createSyncObjects() {
-    imageAvailableSemaphore.resize(pipe.swapChain.framesInFlight);
-    renderFinishedSemaphore.resize(pipe.swapChain.framesInFlight);
-    inFlightFence.resize(pipe.swapChain.framesInFlight);
+    VkSemaphore waitSemaphores[] = { imageAvailableSemaphore[frame] };
+    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+
+    submitInfo.commandBufferCount = commandBufferCount;
+    submitInfo.pCommandBuffers = commandBuffers;
+
+    VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[frame] };
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    if (queue.submit(1,&submitInfo,inFlightFence[frame]) != VK_SUCCESS) {
+        throw std::runtime_error("failed to submit command buffer!");
+    }
+}
+
+VkResult sync::presentFrame(const int frame, const uint32_t imageIndex, VkSwapchainKHR swapChain, instance::svkqueue &queue)
+{
+    VkPresentInfoKHR presentInfo{};
+    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+    VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[frame] };
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = signalSemaphores;
+
+    VkSwapchainKHR swapChains[] = { swapChain };
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = swapChains;
+    presentInfo.pImageIndices = &imageIndex;
+    presentInfo.pResults = nullptr; // Optional
+
+    return queue.present(&presentInfo);
+}
+
+void sync::createSyncObjects()
+{
+    buffer = malloc(sizeof(VkSemaphore) * (count*2) + sizeof(VkFence) * count);
+    if (buffer == nullptr) {
+        throw std::runtime_error("failed to allocate memory for synchronization objects!");
+    }
+    inFlightFence = (VkFence*)buffer;
+    imageAvailableSemaphore = (VkSemaphore*)((char*)buffer + sizeof(VkFence) * count);
+    renderFinishedSemaphore = (VkSemaphore*)((char*)buffer + sizeof(VkFence) * count + sizeof(VkSemaphore) * count);
 
     VkSemaphoreCreateInfo semaphoreInfo{};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -52,16 +87,35 @@ void renderer::createSyncObjects() {
     VkFenceCreateInfo fenceInfo{};
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-    for (int i = 0; i < pipe.swapChain.framesInFlight; i++) {
+
+    for (size_t i = 0; i < count; i++) {
         if (vkCreateSemaphore(inst.device, &semaphoreInfo, nullptr, &imageAvailableSemaphore[i]) != VK_SUCCESS ||
             vkCreateSemaphore(inst.device, &semaphoreInfo, nullptr, &renderFinishedSemaphore[i]) != VK_SUCCESS ||
             vkCreateFence(inst.device, &fenceInfo, nullptr, &inFlightFence[i]) != VK_SUCCESS) {
 
             throw std::runtime_error("failed to create synchronization objects for a frame!");
         }
-
     }
 }
+
+void sync::destroySyncObjects()
+{
+    for (size_t i = 0; i < count; i++) {
+        vkDestroySemaphore(inst.device, imageAvailableSemaphore[i], nullptr);
+        vkDestroySemaphore(inst.device, renderFinishedSemaphore[i], nullptr);
+        vkDestroyFence(inst.device, inFlightFence[i], nullptr);
+    }
+    free(buffer);
+}
+
+} // namespace queue
+
+
+renderer::renderer(instance &inst, swapchain& swap, graphics::pipeline &pipe) 
+    : inst(inst), swap(swap), pipe(pipe), sync(inst, swap.swapChainImages.size())
+{}
+
+renderer::~renderer() = default;
 
 void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
     VkCommandBufferBeginInfo beginInfo{};
@@ -137,10 +191,11 @@ void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 }
 
 void renderer::drawFrame() {
-    vkWaitForFences(inst.device, 1, &inFlightFence[currentFrame], VK_TRUE, UINT64_MAX);
+    sync.syncFrame(currentFrame);
 
     uint32_t imageIndex;
-    VkResult result = vkAcquireNextImageKHR(inst.device, pipe.swapChain.swapChain, UINT64_MAX, imageAvailableSemaphore[currentFrame], VK_NULL_HANDLE, &imageIndex);
+    
+    VkResult result = sync.acquireNextImage(currentFrame,swap.swapChain,imageIndex);
     if (result == VK_ERROR_OUT_OF_DATE_KHR) {
         pipe.reCreateSwapChain();
         return;
@@ -148,7 +203,6 @@ void renderer::drawFrame() {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
-    vkResetFences(inst.device, 1, &inFlightFence[currentFrame]);
 
     vkResetCommandBuffer(swap.commandBuffers[currentFrame], 0);
     
@@ -158,43 +212,9 @@ void renderer::drawFrame() {
 
     recordDrawCommandBuffer(swap.commandBuffers[currentFrame], imageIndex);
 
-    VkSubmitInfo submitInfo{};
-    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    sync.submitFrame(currentFrame,1,&swap.commandBuffers[currentFrame],inst.graphicsQueue);
 
-    VkSemaphore waitSemaphores[] = { imageAvailableSemaphore[currentFrame] };
-    VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-    submitInfo.waitSemaphoreCount = 1;
-    submitInfo.pWaitSemaphores = waitSemaphores;
-    submitInfo.pWaitDstStageMask = waitStages;
-
-    submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &swap.commandBuffers[currentFrame];
-
-    VkSemaphore signalSemaphores[] = { renderFinishedSemaphore[currentFrame] };
-    submitInfo.signalSemaphoreCount = 1;
-    submitInfo.pSignalSemaphores = signalSemaphores;
-
-    if (inst.graphicsQueue.submit(1,&submitInfo,inFlightFence[currentFrame]) != VK_SUCCESS) {
-        throw std::runtime_error("failed to submit draw command buffer!");
-    }
-    // if (vkQueueSubmit(inst.graphicsQueue, 1, &submitInfo, inFlightFence[currentFrame]) != VK_SUCCESS) {
-    //     throw std::runtime_error("failed to submit draw command buffer!");
-    // }
-
-    VkPresentInfoKHR presentInfo{};
-    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-    presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores = signalSemaphores;
-
-    VkSwapchainKHR swapChains[] = { pipe.swapChain.swapChain };
-    presentInfo.swapchainCount = 1;
-    presentInfo.pSwapchains = swapChains;
-    presentInfo.pImageIndices = &imageIndex;
-    presentInfo.pResults = nullptr; // Optional
-
-    // result = vkQueuePresentKHR(inst.presentQueue, &presentInfo);
-    result = inst.presentQueue.present(&presentInfo);
+    result = sync.presentFrame(currentFrame,imageIndex,swap.swapChain,inst.graphicsQueue); //since my graphics queue is the same as the present queue(sync)
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || inst.win.frameBufferResized() ) {
         pipe.reCreateSwapChain();
@@ -206,8 +226,6 @@ void renderer::drawFrame() {
 
 }
 
-
 } // namespace svklib
-
 
 #endif // SVKLIB_RENDERER_HPP
