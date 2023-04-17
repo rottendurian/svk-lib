@@ -290,7 +290,7 @@ builder builder::begin(layout::cache* layoutCache, allocator::pool* pool){
 	return builder;
 }
 
-builder& builder::bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
+void builder::bind_buffer(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags) {
     //create the descriptor binding for the layout
     VkDescriptorSetLayoutBinding newBinding{};
 
@@ -309,14 +309,13 @@ builder& builder::bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferIn
 
     newWrite.descriptorCount = 1;
     newWrite.descriptorType = type;
-    newWrite.pBufferInfo = bufferInfo;
+    newWrite.pBufferInfo = nullptr;
     newWrite.dstBinding = binding;
 
     writes.push_back(newWrite);
-    return *this;
 }
 
-builder& builder::bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
+void builder::bind_image(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags) {
     //create the descriptor binding for the layout
     VkDescriptorSetLayoutBinding newBinding{};
 
@@ -335,11 +334,10 @@ builder& builder::bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo,
 
     newWrite.descriptorCount = 1;
     newWrite.descriptorType = type;
-    newWrite.pImageInfo = imageInfo;
+    newWrite.pImageInfo = nullptr;
     newWrite.dstBinding = binding;
 
     writes.push_back(newWrite);
-    return *this;
 }
 
 void builder::update_buffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo) {
@@ -350,9 +348,9 @@ void builder::update_image(uint32_t binding, VkDescriptorImageInfo *imageInfo) {
     writes[binding].pImageInfo = imageInfo;
 }
 
-bool builder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layout) {
-	//build layout first
-	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+VkDescriptorSetLayout builder::buildLayout()
+{
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	layoutInfo.pNext = nullptr;
 
@@ -361,9 +359,13 @@ bool builder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layout) {
 
 	layout = cache->create_descriptor_layout(&layoutInfo);
 
+	return layout;
+}
+
+VkDescriptorSet builder::buildSet() {
+
 	//allocate descriptor
-	set = alloc->allocate(layout);
-	// if (!success) { throw std::runtime_error("Failed to allocate descriptor"); return false; };
+	VkDescriptorSet set = alloc->allocate(layout);
 
 	//write descriptor
 	for (VkWriteDescriptorSet& w : writes) {
@@ -372,12 +374,7 @@ bool builder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layout) {
 
 	vkUpdateDescriptorSets(alloc->allocator->getDevice(), writes.size(), writes.data(), 0, nullptr);
 
-	return true;
-}
-
-bool builder::build(VkDescriptorSet& set) {
-    VkDescriptorSetLayout layout;
-    return build(set, layout);
+	return set;
 }
 
 //builder class end

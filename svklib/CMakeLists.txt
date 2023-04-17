@@ -41,9 +41,11 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC VulkanMemoryAllocator
     PUBLIC glslang
     PUBLIC SPIRV
-    # PUBLIC OSDependent
-    # PUBLIC OGLCompiler
+    PUBLIC HLSL
+    PUBLIC OSDependent
+    PUBLIC OGLCompiler
     PUBLIC glslang-default-resource-limits
+    PUBLIC GenericCodeGen
 )
 
 target_include_directories(${PROJECT_NAME} 

@@ -79,18 +79,21 @@ class builder {
 public:
 	static builder begin(layout::cache* layoutCache, allocator::pool* pool);
 
-	builder& bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
-	builder& bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
+	void bind_buffer(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags);
+	void bind_image(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags);
 
     void update_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
     void update_image(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
-	bool build(VkDescriptorSet& set, VkDescriptorSetLayout& layout);
-	bool build(VkDescriptorSet& set);
+    VkDescriptorSetLayout buildLayout();
+
+	VkDescriptorSet buildSet();
 private:
 
 	std::vector<VkWriteDescriptorSet> writes;
 	std::vector<VkDescriptorSetLayoutBinding> bindings;
+
+    VkDescriptorSetLayout layout;
 
 	layout::cache* cache;
 	allocator::pool* alloc;

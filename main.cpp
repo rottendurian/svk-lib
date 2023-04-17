@@ -174,23 +174,28 @@ int main() {
 
         pipeline.indexBufferInfo = indexBuffer.getIndexBufferInfo(VK_INDEX_TYPE_UINT16);
 
-        pipeline.descriptorSets.resize(1);
-        pipeline.descriptorSets[0].resize(swap.framesInFlight);
         pipeline.descriptorSetLayouts.resize(1);
 
         svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
         svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
-        descriptorBuilder.bind_buffer(0,bufferInfo.data(),VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
+        descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
+        descriptorBuilder.bind_image(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);
+        pipeline.descriptorSetLayouts[0] = descriptorBuilder.buildLayout();
+
+        pipeline.buildPipeline();
         
+        pipeline.descriptorSets.resize(1);
+        pipeline.descriptorSets[0].resize(swap.framesInFlight);
+
         while (!textureImageComplete.load()) {
             std::this_thread::yield();
         }
         VkDescriptorImageInfo imageInfo = textureImage.getImageInfo();
 
-        descriptorBuilder.bind_image(1,&imageInfo,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);
+        descriptorBuilder.update_image(1,&imageInfo);
         for (uint32_t i = 0; i < swap.framesInFlight; i++) {
             descriptorBuilder.update_buffer(0,&bufferInfo[i]);
-            descriptorBuilder.build(pipeline.descriptorSets[0][i],pipeline.descriptorSetLayouts[0]);
+            pipeline.descriptorSets[0][i] = descriptorBuilder.buildSet();
         }
 
         // glm::vec4 pushConstantData = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -200,7 +205,6 @@ int main() {
         // pipeline.pushConstantData = &pushConstantData;
         // pipeline.pushConstantCount = 1;
         
-        pipeline.buildPipeline();
 
         auto end = std::chrono::high_resolution_clock::now();
         
