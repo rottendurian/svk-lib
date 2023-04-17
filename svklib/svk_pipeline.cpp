@@ -44,19 +44,21 @@ void pipeline::addToBuildQueue(std::function<void()> func)
 void pipeline::buildDepthStencil()
 {
     addToBuildQueue([this](){
-        VkPipelineDepthStencilStateCreateInfo depthStencil{};
-        depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        depthStencil.depthTestEnable = VK_TRUE;
-        depthStencil.depthWriteEnable = VK_TRUE;
-        depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
-        depthStencil.depthBoundsTestEnable = VK_FALSE;
-        depthStencil.minDepthBounds = 0.0f; // Optional
-        depthStencil.maxDepthBounds = 1.0f; // Optional
-        depthStencil.stencilTestEnable = VK_FALSE;
-        depthStencil.front = {}; // Optional
-        depthStencil.back = {}; // Optional
+        // VkPipelineDepthStencilStateCreateInfo depthStencil{};
+        builderInfo.depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+        builderInfo.depthStencil.depthTestEnable = VK_TRUE;
+        builderInfo.depthStencil.depthWriteEnable = VK_TRUE;
+        builderInfo.depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+        builderInfo.depthStencil.depthBoundsTestEnable = VK_FALSE;
+        builderInfo.depthStencil.minDepthBounds = 0.0f; // Optional
+        builderInfo.depthStencil.maxDepthBounds = 1.0f; // Optional
+        builderInfo.depthStencil.stencilTestEnable = VK_FALSE;
+        builderInfo.depthStencil.front = {}; // Optional
+        builderInfo.depthStencil.back = {}; // Optional
 
-        builderInfo.depthStencil = depthStencil;
+        // builderInfo.depthStencil = depthStencil;
+
+        pipelineInfo.pDepthStencilState = &builderInfo.depthStencil;
     });
 
 }
@@ -148,6 +150,8 @@ void pipeline::buildVertexInputState(std::vector<VkVertexInputBindingDescription
         builderInfo.vertexInputState.pVertexBindingDescriptions = descriptions.data();
         builderInfo.vertexInputState.vertexAttributeDescriptionCount = attributes.size();
         builderInfo.vertexInputState.pVertexAttributeDescriptions = attributes.data();
+
+        pipelineInfo.pVertexInputState = &builderInfo.vertexInputState;
     });
 }
 
@@ -156,6 +160,8 @@ void pipeline::buildInputAssembly(VkPrimitiveTopology primitive) {
         builderInfo.inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         builderInfo.inputAssembly.topology = primitive;
         builderInfo.inputAssembly.primitiveRestartEnable = VK_FALSE;
+
+        pipelineInfo.pInputAssemblyState = &builderInfo.inputAssembly;
     });
 }
 
@@ -172,6 +178,8 @@ void pipeline::buildRasterizer(VkPolygonMode polygonMode, VkCullModeFlags cullMo
         builderInfo.rasterizer.depthBiasConstantFactor = 0.0f; // Optional
         builderInfo.rasterizer.depthBiasClamp = 0.0f; // Optional
         builderInfo.rasterizer.depthBiasSlopeFactor = 0.0f; // Optional
+
+        pipelineInfo.pRasterizationState = &builderInfo.rasterizer;
     });
 }
 
@@ -184,6 +192,8 @@ void pipeline::buildMultisampling(VkSampleCountFlagBits sampleCount) {
         builderInfo.multisampling.pSampleMask = nullptr; // Optional
         builderInfo.multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
         builderInfo.multisampling.alphaToOneEnable = VK_FALSE; // Optional
+
+        pipelineInfo.pMultisampleState = &builderInfo.multisampling;
     });
         
 }
@@ -213,7 +223,7 @@ void pipeline::buildColorBlendAttachment(VkBool32 blendEnable, VkColorComponentF
 
 }
 
-void pipeline::buildColorBlending() { // todo
+void pipeline::buildColorBlending() { // TODO
     addToBuildQueue([this]() {
         builderInfo.colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         builderInfo.colorBlending.logicOpEnable = VK_FALSE;
@@ -224,6 +234,8 @@ void pipeline::buildColorBlending() { // todo
         builderInfo.colorBlending.blendConstants[1] = 0.0f; // Optional
         builderInfo.colorBlending.blendConstants[2] = 0.0f; // Optional
         builderInfo.colorBlending.blendConstants[3] = 0.0f; // Optional
+
+        pipelineInfo.pColorBlendState = &builderInfo.colorBlending;
     });
 }
 
@@ -233,6 +245,8 @@ void pipeline::buildViewportState() {
     builderInfo.viewportState.scissorCount = builderInfo.scissors.size();
     builderInfo.viewportState.pViewports = builderInfo.viewports.data();
     builderInfo.viewportState.pScissors = builderInfo.scissors.data();
+
+    pipelineInfo.pViewportState = &builderInfo.viewportState;
 }
 
 void pipeline::buildViewport(float width, float height) {
@@ -259,6 +273,8 @@ void pipeline::buildDynamicState(std::vector<VkDynamicState> &&dynamicStates) {
         builderInfo.dynamicStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
         builderInfo.dynamicStateInfo.dynamicStateCount = builderInfo.dynamicStates.size();
         builderInfo.dynamicStateInfo.pDynamicStates = builderInfo.dynamicStates.data();
+
+        pipelineInfo.pDynamicState = &builderInfo.dynamicStateInfo;
     });
 }
 
@@ -267,6 +283,8 @@ void pipeline::buildTessellationState(uint32_t patchControlPoints)
     addToBuildQueue([this,patchControlPoints](){
         builderInfo.tessellationState.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
         builderInfo.tessellationState.patchControlPoints = patchControlPoints;
+
+        pipelineInfo.pTessellationState = &builderInfo.tessellationState;
     });
 }
 
@@ -279,37 +297,24 @@ void pipeline::buildPipeline() {
         }
         pipelineBuildQueue.pop_front();
     }
-    // for (int i = 0; i < pipelineBuildQueue.size(); i++) {
-    //     while(pipelineBuildQueue[i].load() != true) {
-    //         std::this_thread::yield();
-    //     }
-    // }
-    // pipelineBuildQueue.clear();
 
-    VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
-    pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size();
-    pipelineLayoutInfo.pushConstantRangeCount = pushConstantCount;
-    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; 
+    // VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+    builderInfo.pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    builderInfo.pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
+    builderInfo.pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size();
+    builderInfo.pipelineLayoutInfo.pushConstantRangeCount = 1;
+    builderInfo.pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
-    if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+    if (vkCreatePipelineLayout(inst.device, &builderInfo.pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    VkGraphicsPipelineCreateInfo pipelineInfo{};
+    // VkGraphicsPipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.stageCount = static_cast<uint32_t>(builderInfo.shaderStages.size());
     pipelineInfo.pStages = builderInfo.shaderStages.data();
-    pipelineInfo.pVertexInputState = &builderInfo.vertexInputState;
-    pipelineInfo.pInputAssemblyState = &builderInfo.inputAssembly;
-    pipelineInfo.pViewportState = &builderInfo.viewportState;
-    pipelineInfo.pRasterizationState = &builderInfo.rasterizer;
-    pipelineInfo.pMultisampleState = &builderInfo.multisampling;
-    pipelineInfo.pDepthStencilState = &builderInfo.depthStencil;
-    pipelineInfo.pColorBlendState = &builderInfo.colorBlending;
-    pipelineInfo.pDynamicState = &builderInfo.dynamicStateInfo;
-    pipelineInfo.pTessellationState = &builderInfo.tessellationState;
+
+    
 
     pipelineInfo.layout = pipelineLayout;
     pipelineInfo.renderPass = renderPass;
@@ -575,9 +580,10 @@ void pipeline::buildPipelineLayout(std::vector<VkDescriptorSetLayout>& descripto
         pipelineLayoutInfo.setLayoutCount = builderInfo.descriptorSetLayouts.size();
         pipelineLayoutInfo.pSetLayouts = builderInfo.descriptorSetLayouts.data();
 
-        if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineInfo.layout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create compute pipeline layout!");
         }
+        
     });
 }
 
@@ -589,7 +595,6 @@ void pipeline::buildPipeline() {
         pipelineBuildQueue.pop_front();
     }
 
-    VkComputePipelineCreateInfo pipelineInfo{};
     pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
     pipelineInfo.layout = pipelineLayout;
     pipelineInfo.stage = builderInfo.shaderStage;

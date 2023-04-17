@@ -18,19 +18,16 @@ namespace graphics {
         pipeline(instance& inst,swapchain& swapchain);
         ~pipeline();
 
+        //doesnt need to be in the pipeline
         std::vector<VkBuffer> vertexBuffers;
         std::vector<VkDeviceSize> vertexBufferOffsets;
-
         IndexBufferInfo indexBufferInfo;
-        
-
         std::vector<std::vector<VkDescriptorSet>> descriptorSets;
-        std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-
-        //push constant
-        VkPushConstantRange pushConstantRange{};
-        uint32_t pushConstantCount = 0;
         void* pushConstantData = nullptr;
+
+        std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
+        VkPushConstantRange pushConstantRange;
+
 
     private:
         // void freeDescriptorSets();
@@ -60,6 +57,7 @@ namespace graphics {
             
             VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         };
+        VkGraphicsPipelineCreateInfo pipelineInfo{};
     public:
         //builder
         BuilderInfo builderInfo{};
@@ -140,6 +138,7 @@ namespace compute {
             VkPipeline computePipeline;
 
             std::vector<VkDescriptorSet> descriptorSets;
+            VkComputePipelineCreateInfo pipelineInfo{};
 
         private:
             //References
