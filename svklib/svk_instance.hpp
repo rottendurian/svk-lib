@@ -98,9 +98,12 @@ private:
     VkDebugUtilsMessengerCreateInfoEXT populateDebugMessengerCreateInfo();
 
     static constexpr int validationLayersSize = 1;
-    static constexpr char* validationLayers[] = {
+    static inline const char* const validationLayers[] = {
         "VK_LAYER_KHRONOS_validation"
     };
+    // static const char* validationLayers[] = {
+    //     "VK_LAYER_KHRONOS_validation"
+    // };
     //DEBUGGER END
 
     //VKPHYSICALDEVICE
@@ -131,6 +134,8 @@ public:
         std::mutex mutex;
         svkqueue();
         svkqueue(VkQueue queue);
+        svkqueue(const svkqueue&) = delete;
+        svkqueue& operator=(const svkqueue&) = delete;
     public:
         VkResult submit(uint32_t submitCount,const VkSubmitInfo* submitInfo, VkFence fence);
         VkResult submit(const VkSubmitInfo& submitInfo, VkFence fence);

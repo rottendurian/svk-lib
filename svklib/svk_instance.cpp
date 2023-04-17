@@ -576,11 +576,10 @@ instance::svkbuffer instance::createStagingBuffer(VkDeviceSize size) {
     stageAllocInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
     stageAllocInfo.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
-    instance::svkbuffer stageBuffer = createBuffer(stageBufferInfo,stageAllocInfo,size);
-    return stageBuffer;
+    return createBuffer(stageBufferInfo,stageAllocInfo,size);
 }
 
-instance::svkbuffer instance::createBufferStaged(VkBufferUsageFlags bufferUsage, VkDeviceSize size,const void* data,VkCommandPool commandPool) {
+inline instance::svkbuffer instance::createBufferStaged(VkBufferUsageFlags bufferUsage, VkDeviceSize size,const void* data,VkCommandPool commandPool) {
     instance::svkbuffer stageBuffer = createStagingBuffer(size);
 
     memcpy(stageBuffer.allocInfo.pMappedData,data,size);
@@ -601,13 +600,11 @@ instance::svkbuffer instance::createBufferStaged(VkBufferUsageFlags bufferUsage,
     destroyBuffer(stageBuffer);
 
     return buffer;
-
 }
 
 instance::svkbuffer instance::createBufferStaged(VkBufferUsageFlags bufferUsage, VkDeviceSize size,const void* data) {
     CommandPool commandPool = getCommandPool();
-    svkbuffer buffer = createBufferStaged(bufferUsage,size,data,commandPool.get());
-    return buffer;
+    return createBufferStaged(bufferUsage,size,data,commandPool.get());
 }
 
 instance::svkbuffer instance::createUniformBuffer(VkDeviceSize size) {

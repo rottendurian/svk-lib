@@ -47,7 +47,7 @@ allocator::pool allocator::getPool()
 	if (device == VK_NULL_HANDLE) {
 		throw std::runtime_error("allocator class was not initialized (device is VK_NULL_HANDLE)");
 	}
-    return {this,{},borrowPool()};
+    return pool(this, borrowPool());
 }
 
 allocator::allocator() {}
@@ -161,6 +161,10 @@ VkDescriptorSet allocator::pool::allocate(VkDescriptorSetLayout layout) {
 
 	throw std::runtime_error("Failed to allocate descriptor set (after realloc)");
 }
+
+allocator::pool::pool(svklib::descriptor::allocator *allocator, VkDescriptorPool pool)
+	: allocator(allocator), currentPool(pool)
+{}
 
 allocator::pool::~pool() {
 	returnPool();

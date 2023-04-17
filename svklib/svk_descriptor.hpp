@@ -16,6 +16,7 @@ public:
         VkDescriptorPool currentPool{VK_NULL_HANDLE};
 
         VkDescriptorSet allocate(VkDescriptorSetLayout layout);
+        pool(svklib::descriptor::allocator* allocator, VkDescriptorPool pool);
         pool(const pool&) = delete;
         void operator=(pool const&) = delete;
         ~pool();

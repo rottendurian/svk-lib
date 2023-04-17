@@ -171,11 +171,9 @@ int main() {
 
         pipeline.vertexBuffers.push_back(vertexBuffer.buff);
         pipeline.vertexBufferOffsets.push_back(0);
-
         pipeline.indexBufferInfo = indexBuffer.getIndexBufferInfo(VK_INDEX_TYPE_UINT16);
 
         pipeline.descriptorSetLayouts.resize(1);
-
         svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
         svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
         descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
@@ -207,7 +205,6 @@ int main() {
         
 
         auto end = std::chrono::high_resolution_clock::now();
-        
         double svktime = std::chrono::duration<double>(end - start).count();
 
         std::cout << "Time taken to build pipeline: " << svktime << "s" << std::endl;
