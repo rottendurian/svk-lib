@@ -5,7 +5,9 @@
 
 namespace svklib {
 
-//DescriptorAllocator class start
+namespace descriptor {
+
+//allocator class start
 
 static constexpr struct PoolSizes {
 	std::array<std::pair<VkDescriptorType, float>, 11> sizes = {{
@@ -23,39 +25,34 @@ static constexpr struct PoolSizes {
 	}};
 } s_PoolSizes;
 
-// static DescriptorAllocator* s_DescriptorAllocator = nullptr;
-
-DescriptorAllocator* DescriptorAllocator::init(VkDevice device)
+allocator* allocator::init(VkDevice device)
 {
-	// if (s_DescriptorAllocator != nullptr) {
-	// 	throw std::runtime_error("Attempting to make new instance of DescriptorAllocator not allowed [maybe add support in the future]");
-	// }
-	DescriptorAllocator* m_DescriptorAllocator = new DescriptorAllocator();
-    m_DescriptorAllocator->device = device;
-	return m_DescriptorAllocator;
+	allocator* m_allocator = new allocator();
+    m_allocator->device = device;
+	return m_allocator;
 }
 
-void DescriptorAllocator::cleanup() {
-	// s_DescriptorAllocator->~DescriptorAllocator();
-	// delete s_DescriptorAllocator;
+void allocator::cleanup() {
+	// s_allocator->~allocator();
+	// delete s_allocator;
 }
 
-VkDevice DescriptorAllocator::getDevice()
+VkDevice allocator::getDevice()
 {
     return device;
 }
 
-DescriptorAllocator::DescriptorPool DescriptorAllocator::getPool()
+allocator::pool allocator::getPool()
 {
 	if (device == VK_NULL_HANDLE) {
-		throw std::runtime_error("DescriptorAllocator class was not initialized (device is VK_NULL_HANDLE)");
+		throw std::runtime_error("allocator class was not initialized (device is VK_NULL_HANDLE)");
 	}
     return {this,{},borrowPool()};
 }
 
-DescriptorAllocator::DescriptorAllocator() {}
+allocator::allocator() {}
 
-VkDescriptorPool DescriptorAllocator::createDescriptorPool(int count, VkDescriptorPoolCreateFlags flags)
+VkDescriptorPool allocator::createDescriptorPool(int count, VkDescriptorPoolCreateFlags flags)
 {
 	VkDescriptorPoolSize* sizes = (VkDescriptorPoolSize*)alloca(s_PoolSizes.sizes.size()*sizeof(VkDescriptorPoolSize));
 
@@ -76,7 +73,7 @@ VkDescriptorPool DescriptorAllocator::createDescriptorPool(int count, VkDescript
 	return descriptorPool;
 }
 
-DescriptorAllocator::~DescriptorAllocator()
+allocator::~allocator()
 {
 	while (availablePools.size() > 0) {
 		vkDestroyDescriptorPool(device,availablePools.front(),nullptr);
@@ -84,7 +81,7 @@ DescriptorAllocator::~DescriptorAllocator()
 	}
 }
 
-VkDescriptorPool DescriptorAllocator::borrowPool()
+VkDescriptorPool allocator::borrowPool()
 {
 	VkDescriptorPool currentPool;
 
@@ -99,7 +96,7 @@ VkDescriptorPool DescriptorAllocator::borrowPool()
 	return currentPool;
 }
 
-void DescriptorAllocator::returnPool(DescriptorPool& pool) {
+void allocator::returnPool(pool& pool) {
 	vkResetDescriptorPool(device,pool.currentPool,0); //TODO might be worth it to just pop these off since I am using a deque instead of this optimization
 	for (auto& d_pool : pool.usedPools) {
 		vkResetDescriptorPool(device,d_pool,0);
@@ -116,7 +113,7 @@ void DescriptorAllocator::returnPool(DescriptorPool& pool) {
 
 //DescriptorPool struct start
 
-VkDescriptorSet DescriptorAllocator::DescriptorPool::allocate(VkDescriptorSetLayout layout) {
+VkDescriptorSet allocator::pool::allocate(VkDescriptorSetLayout layout) {
 	VkDescriptorSet set;
 	if (currentPool == VK_NULL_HANDLE){
 		currentPool = allocator->borrowPool();
@@ -165,35 +162,35 @@ VkDescriptorSet DescriptorAllocator::DescriptorPool::allocate(VkDescriptorSetLay
 	throw std::runtime_error("Failed to allocate descriptor set (after realloc)");
 }
 
-DescriptorAllocator::DescriptorPool::~DescriptorPool() {
+allocator::pool::~pool() {
 	returnPool();
 }
 
-void DescriptorAllocator::DescriptorPool::returnPool()
+void allocator::pool::returnPool()
 {
 	allocator->returnPool(*this);
 }
 
 //DescriptorPool struct end
 
+//allocator class end
 
+namespace layout {
 
-//DescriptorAllocator class end
+//layoutcache class start
 
-//DescriptorLayoutCache class start
-
-void DescriptorLayoutCache::init(VkDevice newDevice){
+void cache::init(VkDevice newDevice){
 	device = newDevice;
 }
 
-void DescriptorLayoutCache::cleanup(){
+void cache::cleanup(){
 	//delete every descriptor layout held
 	for (auto pair : layoutCache){
 		vkDestroyDescriptorSetLayout(device, pair.second, nullptr);
 	}
 }
 
-VkDescriptorSetLayout DescriptorLayoutCache::create_descriptor_layout(VkDescriptorSetLayoutCreateInfo* info) {
+VkDescriptorSetLayout cache::create_descriptor_layout(VkDescriptorSetLayoutCreateInfo* info) {
 	DescriptorLayoutInfo layoutinfo;
 	layoutinfo.bindings.reserve(info->bindingCount);
 	bool isSorted = true;
@@ -237,7 +234,7 @@ VkDescriptorSetLayout DescriptorLayoutCache::create_descriptor_layout(VkDescript
     }
 }
 
-bool DescriptorLayoutCache::DescriptorLayoutInfo::operator==(const DescriptorLayoutInfo& other) const{
+bool cache::DescriptorLayoutInfo::operator==(const DescriptorLayoutInfo& other) const{
 	if (other.bindings.size() != bindings.size()){
 		return false;
 	} else {
@@ -260,7 +257,7 @@ bool DescriptorLayoutCache::DescriptorLayoutInfo::operator==(const DescriptorLay
 	}
 }
 
-size_t DescriptorLayoutCache::DescriptorLayoutInfo::hash() const {
+size_t cache::DescriptorLayoutInfo::hash() const {
     using std::size_t;
     using std::hash;
 
@@ -278,21 +275,22 @@ size_t DescriptorLayoutCache::DescriptorLayoutInfo::hash() const {
     return result;
 }
 
-//DescriptorLayoutCache class end
+//layoutcache class end
 
+} // namespace layout
 
-//DescriptorBuilder class start
+//builder class start
 
-DescriptorBuilder DescriptorBuilder::begin(DescriptorLayoutCache* layoutCache, DescriptorAllocator::DescriptorPool* pool){
+builder builder::begin(layout::cache* layoutCache, allocator::pool* pool){
 
-	DescriptorBuilder builder;
+	builder builder;
 
 	builder.cache = layoutCache;
 	builder.alloc = pool;
 	return builder;
 }
 
-DescriptorBuilder& DescriptorBuilder::bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
+builder& builder::bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
     //create the descriptor binding for the layout
     VkDescriptorSetLayoutBinding newBinding{};
 
@@ -318,7 +316,7 @@ DescriptorBuilder& DescriptorBuilder::bind_buffer(uint32_t binding, VkDescriptor
     return *this;
 }
 
-DescriptorBuilder& DescriptorBuilder::bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
+builder& builder::bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags) {
     //create the descriptor binding for the layout
     VkDescriptorSetLayoutBinding newBinding{};
 
@@ -344,15 +342,15 @@ DescriptorBuilder& DescriptorBuilder::bind_image(uint32_t binding, VkDescriptorI
     return *this;
 }
 
-void DescriptorBuilder::update_buffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo) {
+void builder::update_buffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo) {
     writes[binding].pBufferInfo = bufferInfo;
 }
 
-void DescriptorBuilder::update_image(uint32_t binding, VkDescriptorImageInfo *imageInfo) {
+void builder::update_image(uint32_t binding, VkDescriptorImageInfo *imageInfo) {
     writes[binding].pImageInfo = imageInfo;
 }
 
-bool DescriptorBuilder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layout) {
+bool builder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layout) {
 	//build layout first
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -377,12 +375,14 @@ bool DescriptorBuilder::build(VkDescriptorSet& set, VkDescriptorSetLayout& layou
 	return true;
 }
 
-bool DescriptorBuilder::build(VkDescriptorSet& set) {
+bool builder::build(VkDescriptorSet& set) {
     VkDescriptorSetLayout layout;
     return build(set, layout);
 }
 
-//DescriptorBuilder class end
+//builder class end
+
+} // namespace descriptor
 
 } // namespace svklib
 

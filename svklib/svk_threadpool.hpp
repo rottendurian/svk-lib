@@ -1,7 +1,7 @@
 #ifndef SVKLIB_THREADPOOL_HPP
 #define SVKLIB_THREADPOOL_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 
 namespace svklib {
 

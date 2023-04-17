@@ -178,8 +178,8 @@ int main() {
         pipeline.descriptorSets[0].resize(swap.framesInFlight);
         pipeline.descriptorSetLayouts.resize(1);
 
-        svklib::DescriptorAllocator::DescriptorPool descriptorPool{inst.getDescriptorPool()};
-        svklib::DescriptorBuilder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
+        svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
+        svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
         descriptorBuilder.bind_buffer(0,bufferInfo.data(),VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
         
         while (!textureImageComplete.load()) {

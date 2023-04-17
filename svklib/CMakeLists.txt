@@ -20,6 +20,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
+target_precompile_headers(${PROJECT_NAME} PUBLIC pch.hpp)
+
 find_package(Vulkan REQUIRED)
 
 target_include_directories(${PROJECT_NAME} 

@@ -1,7 +1,7 @@
 #ifndef SVKLIB_PIPELINE_HPP
 #define SVKLIB_PIPELINE_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 #include "svk_swapchain.hpp"
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"

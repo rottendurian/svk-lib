@@ -23,7 +23,7 @@ instance::instance(window &win)
     createLogicalDevice();
     createAllocator();
     createCommandPools(std::thread::hardware_concurrency());
-    descriptorAllocator = DescriptorAllocator::init(device);
+    descriptorAllocator = descriptor::allocator::init(device);
     descriptorLayoutCache.init(device);
     glslang::InitializeProcess();
 }
@@ -39,7 +39,7 @@ instance::instance(window &win, VkPhysicalDeviceFeatures& enabledFeatures)
     createAllocator();
     // internalCommandPool = createCommandPool();
     createCommandPools(std::thread::hardware_concurrency());
-    descriptorAllocator = DescriptorAllocator::init(device);
+    descriptorAllocator = descriptor::allocator::init(device);
     descriptorLayoutCache.init(device);
     glslang::InitializeProcess();
 }
@@ -560,7 +560,7 @@ instance::svkbuffer instance::createBuffer(VkBufferCreateInfo bufferCreateInfo,V
     instance::svkbuffer buffer{};
     vmaCreateBuffer(allocator,&bufferCreateInfo,&allocCreateInfo,&buffer.buff,&buffer.alloc,&buffer.allocInfo);
     buffer.size = size;
-    buffer.inst = this;
+    // buffer.inst = this;
 
     return buffer;
 }
@@ -1049,14 +1049,14 @@ void instance::cleanupDeletionQueue() {
 
 // Vulkan Memory Allocator end
 
-DescriptorAllocator::DescriptorPool instance::getDescriptorPool()
+descriptor::allocator::pool instance::getDescriptorPool()
 {
     return descriptorAllocator->getPool();
 }
 
 // Descriptor allocators
-DescriptorBuilder instance::createDescriptorBuilder(DescriptorAllocator::DescriptorPool* pool) {
-    return DescriptorBuilder::begin(&descriptorLayoutCache,pool);
+descriptor::builder instance::createDescriptorBuilder(descriptor::allocator::pool* pool) {
+    return descriptor::builder::begin(&descriptorLayoutCache,pool);
 }
 
 // Descriptor end

@@ -1,33 +1,35 @@
 #ifndef SVKLIB_DESCRIPTOR_HPP
 #define SVKLIB_DESCRIPTOR_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 
 namespace svklib {
 
-class DescriptorAllocator {
-    friend class DescriptorPool;
+namespace descriptor {
+
+class allocator {
+    friend class pool;
 public:
-    struct DescriptorPool {
-        DescriptorAllocator* allocator{nullptr};
+    struct pool {
+        allocator* allocator{nullptr};
         std::deque<VkDescriptorPool> usedPools;
         VkDescriptorPool currentPool{VK_NULL_HANDLE};
 
         VkDescriptorSet allocate(VkDescriptorSetLayout layout);
-        DescriptorPool(const DescriptorPool&) = delete;
-        void operator=(DescriptorPool const&) = delete;
-        ~DescriptorPool();
+        pool(const pool&) = delete;
+        void operator=(pool const&) = delete;
+        ~pool();
         void returnPool();
     };
-    static DescriptorAllocator* init(VkDevice device);
+    static allocator* init(VkDevice device);
     void cleanup();
     VkDevice getDevice();
-    DescriptorPool getPool();
-    ~DescriptorAllocator();
+    pool getPool();
+    ~allocator();
 private:
-    DescriptorAllocator();
-    DescriptorAllocator(const DescriptorAllocator&) = delete;
-    void operator=(DescriptorAllocator const&) = delete;
+    allocator();
+    allocator(const allocator&) = delete;
+    void operator=(allocator const&) = delete;
     
     VkDevice device{VK_NULL_HANDLE};
 
@@ -37,10 +39,12 @@ private:
     std::deque<VkDescriptorPool> availablePools;
 
     VkDescriptorPool borrowPool();
-    void returnPool(DescriptorPool& pool);
+    void returnPool(pool& pool);
 };
 
-class DescriptorLayoutCache {
+namespace layout {
+
+class cache {
 public:
     void init(VkDevice newDevice);
     void cleanup();
@@ -69,12 +73,15 @@ private:
     VkDevice device;
 };
 
-class DescriptorBuilder {
-public:
-	static DescriptorBuilder begin(DescriptorLayoutCache* layoutCache, DescriptorAllocator::DescriptorPool* pool);
+} // namespace layout
 
-	DescriptorBuilder& bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
-	DescriptorBuilder& bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
+class builder {
+public:
+	static builder begin(layout::cache* layoutCache, allocator::pool* pool);
+
+	builder& bind_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
+	builder& bind_image(uint32_t binding, VkDescriptorImageInfo* imageInfo, VkDescriptorType type, VkShaderStageFlags stageFlags);
+
     void update_buffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo);
     void update_image(uint32_t binding, VkDescriptorImageInfo* imageInfo);
 
@@ -85,12 +92,13 @@ private:
 	std::vector<VkWriteDescriptorSet> writes;
 	std::vector<VkDescriptorSetLayoutBinding> bindings;
 
-	DescriptorLayoutCache* cache;
-	DescriptorAllocator::DescriptorPool* alloc;
+	layout::cache* cache;
+	allocator::pool* alloc;
 };
 
-} // namespace svklib
+} // namespace descriptor
 
+} // namespace svklib
 
 #endif // SVKLIB_DESCRIPTOR_HPP
 

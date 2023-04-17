@@ -1,7 +1,7 @@
 #ifndef SVKLIB_SWAPCHAIN_HPP
 #define SVKLIB_SWAPCHAIN_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 #include "svk_instance.hpp"
 
 #include <cstdint>

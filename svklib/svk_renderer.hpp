@@ -1,7 +1,7 @@
 #ifndef SVKLIB_RENDERER_HPP
 #define SVKLIB_RENDERER_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 #include "svk_instance.hpp"
 #include "svk_swapchain.hpp"
 #include "svk_pipeline.hpp"

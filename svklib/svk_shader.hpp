@@ -1,7 +1,7 @@
 #ifndef SVKLIB_SHADER_HPP
 #define SVKLIB_SHADER_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 
 //shader compiler
 #include <ShaderLang.h>

@@ -1,7 +1,7 @@
 #ifndef SVKLIB_INSTANCE_HPP
 #define SVKLIB_INSTANCE_HPP
 
-#include "pch.hpp"
+// #include "pch.hpp"
 #include "svk_window.hpp"
 #include "svk_descriptor.hpp"
 #include "svk_threadpool.hpp"
@@ -192,7 +192,6 @@ public:
         VmaAllocationInfo allocInfo;
         VkBuffer buff;
         VkDeviceSize size;
-        instance* inst;
         VkDescriptorBufferInfo getBufferInfo();
         VkDescriptorBufferInfo getBufferInfo(VkDeviceSize offset);
         graphics::IndexBufferInfo getIndexBufferInfo(VkIndexType indexType);
@@ -245,11 +244,11 @@ private:
 
     //Descriptor Allocators
 public:
-    DescriptorAllocator::DescriptorPool getDescriptorPool();
-    DescriptorBuilder createDescriptorBuilder(DescriptorAllocator::DescriptorPool* pool);
+    descriptor::allocator::pool getDescriptorPool();
+    descriptor::builder createDescriptorBuilder(descriptor::allocator::pool* pool);
 private:
-    DescriptorAllocator* descriptorAllocator;
-    DescriptorLayoutCache descriptorLayoutCache;
+    descriptor::allocator* descriptorAllocator;
+    descriptor::layout::cache descriptorLayoutCache;
     //Descriptor Allocators end
 
 };
