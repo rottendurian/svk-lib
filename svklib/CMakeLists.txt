@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.22.0)
 project(svklib)
 
 add_library(${PROJECT_NAME} STATIC
+    pch.cpp
     svklib.cpp
     svk_window.cpp
     svk_descriptor.cpp
@@ -14,11 +15,13 @@ add_library(${PROJECT_NAME} STATIC
     svk_threadpool.cpp
 )
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 target_precompile_headers(${PROJECT_NAME} PUBLIC pch.hpp)
 
@@ -33,12 +36,12 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 add_subdirectory(dep/glfw)
-add_subdirectory(dep/VulkanMemoryAllocator)
+#add_subdirectory(dep/VulkanMemoryAllocator)
 add_subdirectory(dep/glslang)
 
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC glfw
-    PUBLIC VulkanMemoryAllocator
+    #PUBLIC VulkanMemoryAllocator
     PUBLIC glslang
     PUBLIC SPIRV
     PUBLIC HLSL

@@ -6,14 +6,12 @@
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"
 
-
-
 namespace svklib {
 
 namespace graphics {
 
     class pipeline {
-        friend class renderer;
+        friend class svklib::renderer;
     public:
         pipeline(instance& inst,swapchain& swapchain);
         ~pipeline();
@@ -38,6 +36,7 @@ namespace graphics {
         swapchain& swapChain;
         svklib::threadpool* threadPool;
         //references end
+
         struct BuilderInfo {
             std::vector<VkDynamicState> dynamicStates{};
             VkPipelineDynamicStateCreateInfo dynamicStateInfo{};

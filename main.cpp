@@ -118,7 +118,7 @@ int main() {
     
         svklib::window win("Vulkan", 800, 600);
         svklib::instance inst(win);
-        svklib::swapchain swap(inst,3);
+        svklib::swapchain swap(inst,3,VK_PRESENT_MODE_FIFO_KHR);
         svklib::graphics::pipeline pipeline(inst,swap);
         // svklib::compute::pipeline computePipeline(inst);
         svklib::renderer render(inst,swap,pipeline);

@@ -11,7 +11,7 @@ class allocator {
     friend class pool;
 public:
     struct pool {
-        allocator* allocator{nullptr};
+        svklib::descriptor::allocator* allocator{nullptr};
         std::deque<VkDescriptorPool> usedPools;
         VkDescriptorPool currentPool{VK_NULL_HANDLE};
 

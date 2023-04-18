@@ -12,8 +12,8 @@ namespace gllib {
 #undef far
 
 class camera {
-enum class movement;
 public:
+    enum class movement;
     camera(float fov, float near, float far, uint32_t screenWidth, uint32_t screenHeight, glm::vec3 pos);
     void update_proj();
     void update_view();
