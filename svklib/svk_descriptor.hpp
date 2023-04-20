@@ -2,6 +2,7 @@
 #define SVKLIB_DESCRIPTOR_HPP
 
 // #include "pch.hpp"
+#include <unordered_map>
 
 namespace svklib {
 
