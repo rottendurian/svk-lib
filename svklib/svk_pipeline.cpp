@@ -2,6 +2,7 @@
 #define SVKLIB_PIPELINE_CPP
 
 #include "svk_pipeline.hpp"
+#include <vulkan/vulkan_core.h>
 
 namespace svklib {
 
@@ -13,6 +14,7 @@ pipeline::pipeline(instance& inst,swapchain& swapChain)
 {
     addToBuildQueue([this](){
         createDepthResources();
+        createColorResources();
         createRenderPass();
         createFramebuffers();
     });
@@ -475,6 +477,29 @@ void pipeline::createDepthResources()
     inst.transitionImageLayout(depthImage, imageCreateInfo.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 }
 
+void pipeline::createColorResources() {
+    VkImageCreateInfo imageCreateInfo{};
+    imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageCreateInfo.extent.width = swapChain.swapChainExtent.width;
+    imageCreateInfo.extent.height = swapChain.swapChainExtent.height;
+    imageCreateInfo.extent.depth = 1;
+    imageCreateInfo.mipLevels = 1;
+    imageCreateInfo.arrayLayers = 1;
+    imageCreateInfo.format = swapChain.swapChainImageFormat; 
+    imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    imageCreateInfo.samples = inst.maxMsaa;
+    imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    VmaAllocationCreateInfo allocCreateInfo{};
+    allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+
+    colorImage = inst.createImage(imageCreateInfo, allocCreateInfo);
+    inst.createImageView(colorImage, imageCreateInfo.format, VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
+}
+
 void pipeline::createFramebuffers()
 {
     frameBuffers.resize(swapChain.swapChainImageViews.size());
@@ -505,6 +530,7 @@ void pipeline::destroyFramebuffers() {
         vkDestroyFramebuffer(inst.device, framebuffer, nullptr);
     }
     inst.destroyImage(depthImage);
+    inst.destroyImage(colorImage);
 }
 
 // framebuffers end

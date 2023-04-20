@@ -35,7 +35,7 @@ target_link_libraries(${PROJECT_NAME}
 
 add_subdirectory(dep/glfw)
 #add_subdirectory(dep/VulkanMemoryAllocator)
-add_subdirectory(dep/glslang)
+#add_subdirectory(dep/glslang)
 
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC glfw

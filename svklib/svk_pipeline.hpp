@@ -103,6 +103,8 @@ namespace graphics {
         //framebuffers
         instance::svkimage depthImage;
         void createDepthResources();
+        instance::svkimage colorImage;
+        void createColorResources();
         std::vector<VkFramebuffer> frameBuffers{};
         void createFramebuffers();
         void destroyFramebuffers();
