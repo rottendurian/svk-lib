@@ -2,6 +2,7 @@ out/*
 .vs/*
 .vscode/*
 build/*
+.config/*
 *.bat
 *.exe
 *.log
