@@ -3,6 +3,7 @@ out/*
 .vscode/*
 build/*
 .config/*
+.cache/*
 *.bat
 *.exe
 *.log
