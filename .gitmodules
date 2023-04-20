@@ -7,9 +7,9 @@
 [submodule "svklib/dep/glfw"]
 	path = svklib/dep/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "svklib/dep/glslang"]
-	path = svklib/dep/glslang
-	url = https://github.com/KhronosGroup/glslang.git
+#[submodule "svklib/dep/glslang"]
+#	path = svklib/dep/glslang
+#	url = https://github.com/KhronosGroup/glslang.git
 [submodule "stb"]
 	path = stb
 	url = https://github.com/nothings/stb

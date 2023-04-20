@@ -271,7 +271,7 @@ int main() {
 
         inst.waitForDeviceIdle();
         
-        //inst.destroyImage(textureImage);
+        inst.destroyImage(textureImage);
         inst.destroyBuffer(vertexBuffer);
         inst.destroyBuffer(indexBuffer);
         
