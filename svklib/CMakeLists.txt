@@ -64,8 +64,8 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC dep/glfw/include
-    PUBLIC dep/VulkanMemoryAllocator/include
-    PUBLIC dep/glslang/glslang/Public
+    #PUBLIC dep/VulkanMemoryAllocator/include
+    #PUBLIC dep/glslang/glslang/Public
     PUBLIC dep/stp
     PUBLIC dep
 )
