@@ -173,8 +173,8 @@ void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
     }
 
     //push constant
-    if (pipe.pushConstantData != nullptr) {
-        vkCmdPushConstants(commandBuffer, pipe.pipelineLayout, pipe.pushConstantRange.stageFlags, pipe.pushConstantRange.offset, pipe.pushConstantRange.size, pipe.pushConstantData);
+    if (pipe.pushConstantData != nullptr && pipe.pushConstantRange.has_value()) {
+        vkCmdPushConstants(commandBuffer, pipe.pipelineLayout, pipe.pushConstantRange.value().stageFlags, pipe.pushConstantRange.value().offset, pipe.pushConstantRange.value().size, pipe.pushConstantData);
     }
 
     // vkCmdDraw(commandBuffer, 3, 1, 0, 0);

@@ -5,6 +5,8 @@
 #include "svk_swapchain.hpp"
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"
+#include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan_structs.hpp>
 
 namespace svklib {
 
@@ -21,13 +23,15 @@ namespace graphics {
         std::vector<VkDeviceSize> vertexBufferOffsets;
         IndexBufferInfo indexBufferInfo;
         std::vector<std::vector<VkDescriptorSet>> descriptorSets;
-        void* pushConstantData = nullptr;
-
+        
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-        VkPushConstantRange pushConstantRange;
 
+        void buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size);
+        void updatePushConstantData(void* data);
 
     private:
+        std::optional<VkPushConstantRange> pushConstantRange{};
+        void* pushConstantData = nullptr;
         // void freeDescriptorSets();
         // need to borrow a descriptorPool
 
@@ -69,7 +73,7 @@ namespace graphics {
         void buildVertexInputState(std::vector<VkVertexInputBindingDescription> &descriptions,std::vector<VkVertexInputAttributeDescription> &attributes);
         void buildInputAssembly(VkPrimitiveTopology primitive);
         void buildRasterizer(VkPolygonMode polygonMode, VkCullModeFlags cullMode, VkFrontFace frontFace);
-        void buildMultisampling(VkSampleCountFlagBits sampleCount=VK_SAMPLE_COUNT_1_BIT);
+        void buildMultisampling();
         // below may need more functionality in the future 
         void buildColorBlendAttachment(VkBool32 blendEnable, VkColorComponentFlags colorWriteMask=VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT); 
         // I genuinely don't know what this does
