@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.22.0)
 
 project(svklib)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 add_library(${PROJECT_NAME} STATIC
     pch.cpp
     svklib.cpp
@@ -14,10 +18,6 @@ add_library(${PROJECT_NAME} STATIC
     svk_shader.cpp
     svk_threadpool.cpp
 )
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
@@ -33,26 +33,26 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ${Vulkan_LIBRARIES}
 )
 
-add_subdirectory(dep/glfw)
-#add_subdirectory(dep/VulkanMemoryAllocator)
-add_subdirectory(dep/glslang)
+find_package(glslang CONFIG REQUIRED)
+find_package(Threads REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} 
-    PUBLIC glfw
-    #PUBLIC VulkanMemoryAllocator
-    PUBLIC glslang
-    PUBLIC SPIRV
-    PUBLIC HLSL
-    PUBLIC OSDependent
-    PUBLIC OGLCompiler
-    PUBLIC glslang-default-resource-limits
-    PUBLIC GenericCodeGen
+   PUBLIC 
+     glslang::glslang 
+     glslang::SPIRV 
+     glslang::glslang-default-resource-limits
 )
 
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+target_include_directories(${PROJECT_NAME} PUBLIC ${glfw3_INCLUDE_DIRS})
+
 target_include_directories(${PROJECT_NAME} 
-    PUBLIC dep/glfw/include
-    PUBLIC dep/VulkanMemoryAllocator/include
-    PUBLIC dep/glslang/glslang/Public
     PUBLIC dep/stp
+    PUBLIC dep/stb
+    PUBLIC dep/vma/include
     PUBLIC dep
 )
+
+
+

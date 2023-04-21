@@ -5,6 +5,7 @@
 #include "svk_window.hpp"
 #include "svk_descriptor.hpp"
 #include "svk_threadpool.hpp"
+#include <vulkan/vulkan_core.h>
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
@@ -71,7 +72,6 @@ private:
     };
 
     std::optional<QueueFamilyIndices> queueFamilies;
-    std::optional<VkSampleCountFlagBits> msaaSamples; //maybe 0 to indicate no multisampling
 public:
     //VKINSTANCE
     VkInstance inst;
@@ -121,6 +121,9 @@ private:
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates,VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
+    
+    VkSampleCountFlagBits maxMsaa = VK_SAMPLE_COUNT_1_BIT;
+    VkSampleCountFlagBits getMaxUsableSampleCount();
     //VKPHYSICALDEVICE END
 
 private:

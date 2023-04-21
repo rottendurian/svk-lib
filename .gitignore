@@ -2,12 +2,14 @@ out/*
 .vs/*
 .vscode/*
 build/*
+build_release/*
+build_debug/*
 .config/*
 .cache/*
 *.bat
 *.exe
 *.log
-
+*.sh
 # Prerequisites
 *.d
 

@@ -4,7 +4,7 @@
 // #include "pch.hpp"
 
 //shader compiler
-#include <ShaderLang.h>
+#include <glslang/Public/ShaderLang.h>
 #include <glslang/Public/ResourceLimits.h>
 #include <glslang/SPIRV/GlslangToSpv.h>
 

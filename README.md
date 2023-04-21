@@ -1,3 +1,10 @@
 A simple vulkan library with multi-threading support built in. 
 
-To generate hlsl compliant shaders, run hslsinit.py then compile to update glslang validator library
+Built using vcpkg, setup.py will setup vcpkg for you and include the needed directories
+
+This project also relies on the VulkanSDK which should locatable by FindVulkan in cmake
+
+Example of setting up the cmake file:
+cmake -B build_debug -S . -DCMAKE_BUILD_TYPE=Debug
+
+cmake --build build_debug --parallel 16
