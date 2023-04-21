@@ -33,8 +33,6 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ${Vulkan_LIBRARIES}
 )
 
-message("glslang libraries ${GLSLANG_LIBRARIES}")
-
 find_package(glslang CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 
@@ -45,14 +43,11 @@ target_link_libraries(${PROJECT_NAME}
      glslang::glslang-default-resource-limits
 )
 
-add_subdirectory(dep/glfw)
-
-target_link_libraries(${PROJECT_NAME} 
-    PUBLIC glfw
-)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
+target_include_directories(${PROJECT_NAME} PUBLIC ${glfw3_INCLUDE_DIRS})
 
 target_include_directories(${PROJECT_NAME} 
-    PUBLIC dep/glfw/include
     PUBLIC dep/stp
     PUBLIC dep/stb
     PUBLIC dep
