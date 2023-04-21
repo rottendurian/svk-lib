@@ -19,3 +19,6 @@
 [submodule "svklib/dep/stp"]
 	path = svklib/dep/stp
 	url = https://github.com/rottendurian/SimpleThreadPool.git
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/microsoft/vcpkg.git
