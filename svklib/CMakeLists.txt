@@ -50,5 +50,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${glfw3_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} 
     PUBLIC dep/stp
     PUBLIC dep/stb
+    PUBLIC dep/vma/include
     PUBLIC dep
 )
