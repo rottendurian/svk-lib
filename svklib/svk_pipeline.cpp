@@ -445,6 +445,7 @@ void pipeline::reCreateSwapChain() {
     swapChain.createVKSwapChain();
     swapChain.createImageViews();
     createDepthResources();
+    createColorResources();
     createFramebuffers();
 
 }
