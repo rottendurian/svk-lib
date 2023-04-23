@@ -18,7 +18,7 @@ namespace graphics {
         friend class svklib::renderer;
         friend class svklib::graphics::pipeline::builder;
         
-        struct buildInfo {
+        struct BuildInfo {
             std::vector<VkDynamicState> dynamicStates{};
             VkPipelineDynamicStateCreateInfo dynamicStateInfo{};
 
@@ -52,7 +52,7 @@ namespace graphics {
             VkGraphicsPipelineCreateInfo pipelineInfo{};
         };
 
-        pipeline(instance& inst,swapchain& swapchain, buildInfo* builderInfo, 
+        pipeline(instance& inst,swapchain& swapchain, BuildInfo* builderInfo, 
                  VkPipelineLayout pipelineLayout, VkRenderPass renderPass, VkPipeline graphicsPipeline);
 
     public:
@@ -82,7 +82,7 @@ namespace graphics {
         //framebuffers end
 
         
-        std::unique_ptr<buildInfo> builderInfo;
+        std::unique_ptr<BuildInfo> builderInfo;
     public:
         //doesnt need to be in the pipeline
         std::vector<VkBuffer> vertexBuffers;
@@ -123,14 +123,13 @@ namespace graphics {
                
                 instance& inst;
                 swapchain& swapChain;
-                svklib::graphics::pipeline* pipe;
                 svklib::threadpool* threadPool;
                 
                 void addToBuildQueue(std::function<void()> func);
                 std::deque<std::atomic_bool> pipelineBuildQueue;
                 std::mutex shaderVectorMutex;
 
-                buildInfo* info;
+                BuildInfo* info;
                 
                 std::mutex attachmentMutex;
                 void createRenderPass();
@@ -140,10 +139,8 @@ namespace graphics {
                 VkPipelineLayout pipelineLayout;
                 VkRenderPass renderPass;
                 VkPipeline graphicsPipeline;
-
-
-
         };
+
 
     };
 
@@ -152,36 +149,54 @@ namespace graphics {
 namespace compute {
 
     class pipeline {
-        friend class renderer;
+        private:
+            class builder;
+            friend class builder;
+            friend class renderer;
+            struct BuildInfo {
+                VkPipelineShaderStageCreateInfo shaderStage{};
+                std::vector<VkDescriptorSetLayout> descriptorSetLayouts{};
+                VkComputePipelineCreateInfo pipelineInfo{};
+            };
+            pipeline(instance& inst, BuildInfo* buildInfo, VkPipelineLayout pipelineLayout, VkPipeline pipeline);
         public:
-            pipeline(instance& inst);
             ~pipeline();
 
-            struct BuildInfo {
-                VkPipelineShaderStageCreateInfo shaderStage;
-                std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-            };
-            BuildInfo builderInfo{};
-
-            void addToBuildQueue(std::function<void()> func);
-            void buildShader(const char* path, VkShaderStageFlagBits stage);
-            void buildPipelineLayout(std::vector<VkDescriptorSetLayout>& descriptorSetLayouts);
-            void buildPipeline();
-
-        private:
-            std::deque<std::atomic_bool> pipelineBuildQueue;
+            std::unique_ptr<BuildInfo> builderInfo{};
 
             VkPipelineLayout pipelineLayout;
             VkPipeline computePipeline;
 
-            std::vector<VkDescriptorSet> descriptorSets;
-            VkComputePipelineCreateInfo pipelineInfo{};
+            std::vector<std::vector<VkDescriptorSet>> descriptorSets;
 
         private:
-            //References
             instance& inst;
-            svklib::threadpool* threadPool;
-            //References end
+            
+            class builder {
+            public:
+                ~builder()=default;
+                
+                static builder begin(instance& inst);
+                builder& buildShader(const char* path, VkShaderStageFlagBits stage);
+                builder& addDescriptorSetLayout(VkDescriptorSetLayout layout);
+                builder& buildPipelineLayout();
+                svklib::compute::pipeline buildPipeline(VkPipeline oldPipeline);
+                
+            private:
+                builder(instance& inst);
+                instance& inst;
+
+                BuildInfo* info;
+                svklib::threadpool* threadPool;
+                std::deque<std::atomic_bool> pipelineBuildQueue;
+                void addToBuildQueue(std::function<void()> func);
+
+                VkPipelineLayout pipelineLayout;
+                VkPipeline computePipeline;
+
+            };
+
+
 
 
 

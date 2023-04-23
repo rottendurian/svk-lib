@@ -121,7 +121,7 @@ int main() {
     
         svklib::window win("Vulkan", 800, 600);
         svklib::instance inst(win);
-        svklib::swapchain swap(inst,3,inst.getMaxMsaa(),VK_PRESENT_MODE_FIFO_KHR);
+        svklib::swapchain swap(inst,3,VK_SAMPLE_COUNT_1_BIT,VK_PRESENT_MODE_FIFO_KHR);
 
         std::atomic_bool textureImageComplete(false);
         svklib::instance::svkimage textureImage;
@@ -161,7 +161,7 @@ int main() {
         descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
         descriptorBuilder.bind_image(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);
         pipelineBuilder.addDescriptorSetLayout(descriptorBuilder.buildLayout());
-        auto pipeline = pipelineBuilder.buildPipeline(VK_NULL_HANDLE);
+        svklib::graphics::pipeline pipeline = pipelineBuilder.buildPipeline(VK_NULL_HANDLE);
         
         svklib::instance::svkbuffer vertexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertices.size()*sizeof(Vertex), vertices.data());
         svklib::instance::svkbuffer indexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size()*sizeof(uint16_t), indices.data());

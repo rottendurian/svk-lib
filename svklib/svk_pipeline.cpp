@@ -10,7 +10,7 @@ namespace svklib {
 
 namespace graphics {
 
-pipeline::pipeline(instance& inst,swapchain& swapChain, buildInfo* builderInfo, 
+pipeline::pipeline(instance& inst,swapchain& swapChain, BuildInfo* builderInfo, 
                  VkPipelineLayout pipelineLayout, VkRenderPass renderPass, VkPipeline graphicsPipeline)
     : inst(inst),swapChain(swapChain),builderInfo(builderInfo),pipelineLayout(pipelineLayout),
       renderPass(renderPass),graphicsPipeline(graphicsPipeline)
@@ -35,9 +35,9 @@ pipeline::builder pipeline::builder::begin(instance& inst, swapchain& swapChain)
 }
 
 pipeline::builder::builder(instance& inst, swapchain& swapChain) 
-    :inst(inst),swapChain(swapChain),threadPool(threadpool::get_instance()),info(new buildInfo)
+    :inst(inst),swapChain(swapChain),threadPool(threadpool::get_instance()),info(new BuildInfo{})
 {
-    
+   //TODO check if BuildInfo is nulled out 
 }
 
 //pipeline::builder::~builder() = default; 
@@ -597,10 +597,9 @@ void pipeline::destroyFramebuffers() {
 
 namespace compute {
 
-pipeline::pipeline(instance& inst) 
-    : inst(inst)
+pipeline::pipeline(instance& inst,BuildInfo* buildInfo,VkPipelineLayout pipelineLayout,VkPipeline computePipeline) 
+    : inst(inst),builderInfo(buildInfo),pipelineLayout(pipelineLayout),computePipeline(computePipeline)
 {
-    this->threadPool = svklib::threadpool::get_instance();
 }
 
 pipeline::~pipeline() {
@@ -608,13 +607,22 @@ pipeline::~pipeline() {
     vkDestroyPipeline(inst.device, computePipeline, nullptr);
 }
 
-void pipeline::addToBuildQueue(std::function<void()> func)
+pipeline::builder pipeline::builder::begin(instance& inst) {
+    return builder(inst);
+}
+
+pipeline::builder::builder(instance& inst)
+    : inst(inst),info(new BuildInfo{}),threadPool(threadpool::get_instance()) 
+{
+    
+}
+void pipeline::builder::addToBuildQueue(std::function<void()> func)
 {
     pipelineBuildQueue.emplace_back(false);
     threadPool->add_task(func,&pipelineBuildQueue.back());
 }
 
-void pipeline::buildShader(const char* path, VkShaderStageFlagBits stage) {
+pipeline::builder& pipeline::builder::buildShader(const char* path, VkShaderStageFlagBits stage) {
     addToBuildQueue([this,path,stage](){
         EShLanguage EShStage;
         switch (stage) {
@@ -649,27 +657,34 @@ void pipeline::buildShader(const char* path, VkShaderStageFlagBits stage) {
         shaderStageInfo.module = shaderModule;
         shaderStageInfo.pName = "main";
 
-        builderInfo.shaderStage = shaderStageInfo;
+        info->shaderStage = shaderStageInfo;
 
-    });   
+    });  
+
+    return *this;
 }
 
-void pipeline::buildPipelineLayout(std::vector<VkDescriptorSetLayout>& descriptorSetLayouts) {
-    builderInfo.descriptorSetLayouts = descriptorSetLayouts;
+pipeline::builder& pipeline::builder::addDescriptorSetLayout(VkDescriptorSetLayout layout) {
+    info->descriptorSetLayouts.push_back(layout);
+    return *this;
+}
+
+pipeline::builder& pipeline::builder::buildPipelineLayout() {
     addToBuildQueue([this](){
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = builderInfo.descriptorSetLayouts.size();
-        pipelineLayoutInfo.pSetLayouts = builderInfo.descriptorSetLayouts.data();
+        pipelineLayoutInfo.setLayoutCount = info->descriptorSetLayouts.size();
+        pipelineLayoutInfo.pSetLayouts = info->descriptorSetLayouts.data();
 
-        if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineInfo.layout) != VK_SUCCESS) {
+        if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create compute pipeline layout!");
         }
         
     });
+    return *this;
 }
 
-void pipeline::buildPipeline() {
+pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
     while (pipelineBuildQueue.size() != 0) {
         while (pipelineBuildQueue.front().load() != true) {
             std::this_thread::yield();
@@ -677,13 +692,18 @@ void pipeline::buildPipeline() {
         pipelineBuildQueue.pop_front();
     }
 
-    pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-    pipelineInfo.layout = pipelineLayout;
-    pipelineInfo.stage = builderInfo.shaderStage;
+    info->pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+    info->pipelineInfo.layout = pipelineLayout;
+    info->pipelineInfo.stage = info->shaderStage;
 
-    if (vkCreateComputePipelines(inst.device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &computePipeline) != VK_SUCCESS) {
+    info->pipelineInfo.basePipelineIndex = 0;
+    info->pipelineInfo.basePipelineHandle = oldPipeline;
+
+    if (vkCreateComputePipelines(inst.device, VK_NULL_HANDLE, 1, &info->pipelineInfo, nullptr, &computePipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create compute pipeline!");
     }
+
+    return pipeline(inst,info,pipelineLayout,computePipeline);
 }
 
 
