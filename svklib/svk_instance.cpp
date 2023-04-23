@@ -1170,6 +1170,8 @@ VkCommandPool instance::CommandPool::get()
 
 void instance::CommandPool::returnPool()
 {
+    if (this->pool == VK_NULL_HANDLE) 
+        return;
     this->pool = VK_NULL_HANDLE;
     static threadpool* pool = threadpool::get_instance();
     instance& inst = this->inst;

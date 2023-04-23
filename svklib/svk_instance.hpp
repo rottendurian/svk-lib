@@ -153,10 +153,13 @@ public:
 
 private:
     class CommandPool {
+    private:
         friend class instance;
-    public:
         CommandPool(instance& inst, const VkCommandPool commandPool, const int id);
+    public:
         ~CommandPool();
+        CommandPool(const CommandPool&) = delete;
+        CommandPool& operator=(const CommandPool&) = delete;
         VkCommandPool get();
         void returnPool();
     private:
