@@ -12,7 +12,6 @@ layout(location = 0) out vec4 outColor;
 //     vec4 color;
 // } pushConstant;
  
-
 void main() {
     outColor = vec4(fragColor*texture(texSampler, texCoord).rgb,1.0);
     // outColor = vec4(1.0);

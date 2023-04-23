@@ -3,6 +3,7 @@
 
 // #include "pch.hpp"
 #include "svk_instance.hpp"
+#include "vulkan/vulkan_core.h"
 
 #include <cstdint>
 #include <algorithm> 
@@ -13,8 +14,8 @@ class swapchain {
 friend class graphics::pipeline;
 friend class renderer;
 public:
-    swapchain(instance& inst, int framesInFlight);
-    swapchain(instance& inst, int framesInFlight, VkPresentModeKHR preferredPresentMode);
+    swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples);
+    swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples, VkPresentModeKHR preferredPresentMode);
     ~swapchain();
     
 private:
@@ -23,6 +24,7 @@ private:
     //references end
     //swapchain
 public:
+    const VkSampleCountFlagBits samples;
     const int framesInFlight;
     VkCommandBuffer* commandBuffers;
     int currentFrame = 0;

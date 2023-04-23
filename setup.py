@@ -7,7 +7,7 @@ def setup():
     else:
         script = ["bash", "vcpkg/bootstrap-vcpkg.sh"]
 
-    subprocess.run(script)
+    subprocess.run(script +  ["-disableMetrics"])
 
 
 

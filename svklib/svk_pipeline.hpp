@@ -1,52 +1,33 @@
 #ifndef SVKLIB_PIPELINE_HPP
 #define SVKLIB_PIPELINE_HPP
 
-// #include "pch.hpp"
 #include "svk_swapchain.hpp"
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"
+#include <memory>
 #include <vulkan/vulkan_core.h>
 #include <vulkan/vulkan_structs.hpp>
 
 namespace svklib {
 
 namespace graphics {
-
     class pipeline {
-        friend class svklib::renderer;
     public:
-        pipeline(instance& inst,swapchain& swapchain);
-        ~pipeline();
-
-        //doesnt need to be in the pipeline
-        std::vector<VkBuffer> vertexBuffers;
-        std::vector<VkDeviceSize> vertexBufferOffsets;
-        IndexBufferInfo indexBufferInfo;
-        std::vector<std::vector<VkDescriptorSet>> descriptorSets;
-        
-        std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
-
-        void buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size);
-        void updatePushConstantData(void* data);
-
+        class builder;
     private:
-        std::optional<VkPushConstantRange> pushConstantRange{};
-        void* pushConstantData = nullptr;
-        // void freeDescriptorSets();
-        // need to borrow a descriptorPool
-
-        //references
-        instance& inst;
-        swapchain& swapChain;
-        svklib::threadpool* threadPool;
-        //references end
-
-        struct BuilderInfo {
+        friend class svklib::renderer;
+        friend class svklib::graphics::pipeline::builder;
+        
+        struct buildInfo {
             std::vector<VkDynamicState> dynamicStates{};
             VkPipelineDynamicStateCreateInfo dynamicStateInfo{};
 
             std::vector<VkPipelineShaderStageCreateInfo> shaderStages{};
+
+            std::vector<VkVertexInputBindingDescription> descriptions;
+            std::vector<VkVertexInputAttributeDescription> attributes;
             VkPipelineVertexInputStateCreateInfo vertexInputState{};
+
             VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
             VkPipelineViewportStateCreateInfo viewportState{};
             std::vector<VkViewport> viewports{};
@@ -57,53 +38,39 @@ namespace graphics {
             VkPipelineColorBlendStateCreateInfo colorBlending{}; //might not need
             VkPipelineDepthStencilStateCreateInfo depthStencil{};
             VkPipelineTessellationStateCreateInfo tessellationState{};
+
+            std::optional<VkPushConstantRange> pushConstantRange{};
+
+            std::vector<VkDescriptorSetLayout> descriptorSetLayouts; 
             
+            //abstraction for subpasses
+            std::vector<VkAttachmentDescription> attachments;
+            std::vector<VkAttachmentReference> attachmentRefs;
+            VkSubpassDescription subpass{};
+
             VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+            VkGraphicsPipelineCreateInfo pipelineInfo{};
         };
-        VkGraphicsPipelineCreateInfo pipelineInfo{};
+
+        pipeline(instance& inst,swapchain& swapchain, buildInfo* builderInfo, 
+                 VkPipelineLayout pipelineLayout, VkRenderPass renderPass, VkPipeline graphicsPipeline);
+
     public:
-        //builder
-        BuilderInfo builderInfo{};
-        
-        void addToBuildQueue(std::function<void()> func);
+        ~pipeline();
 
-        void buildDepthStencil();
-        void buildShader(const char* path, VkShaderStageFlagBits stage);
-        // void buildShader(std::initializer_list<const char*> paths, VkShaderStageFlagBits stage); //this functions shader initializer doesn't work
-        void buildVertexInputState(std::vector<VkVertexInputBindingDescription> &descriptions,std::vector<VkVertexInputAttributeDescription> &attributes);
-        void buildInputAssembly(VkPrimitiveTopology primitive);
-        void buildRasterizer(VkPolygonMode polygonMode, VkCullModeFlags cullMode, VkFrontFace frontFace);
-        void buildMultisampling();
-        // below may need more functionality in the future 
-        void buildColorBlendAttachment(VkBool32 blendEnable, VkColorComponentFlags colorWriteMask=VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT); 
-        // I genuinely don't know what this does
-        void buildColorBlending();
-        void buildViewport(float width, float height);
-        void buildScissor(VkOffset2D offset,VkExtent2D extent);
-        void buildViewportState();
-        void buildDynamicState(std::vector<VkDynamicState> &&dynamicStates);
-        void buildTessellationState(uint32_t patchControlPoints);
 
-        void buildPipeline();
-        
     private:
-        std::deque<std::atomic_bool> pipelineBuildQueue;
-        std::mutex shaderVectorMutex;
-        //builder end
-    private:
+        instance& inst;
+        swapchain& swapChain;
 
         //pipeline
         VkPipelineLayout pipelineLayout;
         VkRenderPass renderPass;
         VkPipeline graphicsPipeline;
-        
-        void createGraphicsPipeline();
-        void createRenderPass(); //todo abstractions
         //pipeline end
-    public:
-    private:
-        void reCreateSwapChain();
 
+        void reCreateSwapChain();
+        
         //framebuffers
         instance::svkimage depthImage;
         void createDepthResources();
@@ -113,6 +80,71 @@ namespace graphics {
         void createFramebuffers();
         void destroyFramebuffers();
         //framebuffers end
+
+        
+        std::unique_ptr<buildInfo> builderInfo;
+    public:
+        //doesnt need to be in the pipeline
+        std::vector<VkBuffer> vertexBuffers;
+        std::vector<VkDeviceSize> vertexBufferOffsets;
+        IndexBufferInfo indexBufferInfo;
+        std::vector<std::vector<VkDescriptorSet>> descriptorSets;
+        
+        void updatePushConstantData(void* data);
+
+        std::optional<VkPushConstantRange> pushConstantRange;
+        void* pushConstantData = nullptr;
+
+        class builder {
+            public:
+                static builder begin(instance& inst, swapchain& swapChain);
+                builder& buildShader(const char* path, VkShaderStageFlagBits stage);
+                builder& buildVertexInputState(std::vector<VkVertexInputBindingDescription>& descriptions,std::vector<VkVertexInputAttributeDescription>& attributes);
+                builder& buildInputAssembly(VkPrimitiveTopology primitive);
+                builder& buildRasterizer(VkPolygonMode polygonMode, VkCullModeFlags cullMode, VkFrontFace frontFace);
+                builder& buildDepthStencil();
+                builder& buildMultisampling();
+                builder& buildColorBlendAttachment(VkBool32 blendEnable, VkColorComponentFlags colorWriteMask=VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT); 
+                builder& buildColorBlending();
+                builder& buildViewport(float width, float height);
+                builder& buildScissor(VkOffset2D offset,VkExtent2D extent);
+                builder& buildViewportState();
+                builder& buildDynamicState(std::vector<VkDynamicState> dynamicStates);
+                builder& buildTessellationState(uint32_t patchControlPoints);
+
+                builder& buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size);
+                builder& addDescriptorSetLayout(VkDescriptorSetLayout layout);
+                
+                svklib::graphics::pipeline buildPipeline(VkPipeline oldPipeline);
+
+            private:
+                builder(instance& inst, swapchain& swapChain);
+                //~builder();
+               
+                instance& inst;
+                swapchain& swapChain;
+                svklib::graphics::pipeline* pipe;
+                svklib::threadpool* threadPool;
+                
+                void addToBuildQueue(std::function<void()> func);
+                std::deque<std::atomic_bool> pipelineBuildQueue;
+                std::mutex shaderVectorMutex;
+
+                buildInfo* info;
+                
+                std::mutex attachmentMutex;
+                void createRenderPass();
+                void buildAttachment(VkFormat format,VkSampleCountFlagBits samples, VkImageLayout initialLayout, VkImageLayout finalLayout, VkImageLayout refLayout);
+                void buildRenderPass();
+
+                VkPipelineLayout pipelineLayout;
+                VkRenderPass renderPass;
+                VkPipeline graphicsPipeline;
+
+
+
+        };
+
     };
 
 } // namespace graphics

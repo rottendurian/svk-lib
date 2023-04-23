@@ -149,14 +149,14 @@ void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 
     // pipe.viewports.clear();
     // pipe.buildViewport(static_cast<float>(pipe.swapChain.swapChainExtent.width),static_cast<float>(pipe.swapChain.swapChainExtent.height));
-    pipe.builderInfo.viewports[0].width = static_cast<float>(pipe.swapChain.swapChainExtent.width);
-    pipe.builderInfo.viewports[0].height = static_cast<float>(pipe.swapChain.swapChainExtent.height);
-    vkCmdSetViewport(commandBuffer, 0, pipe.builderInfo.viewports.size(), pipe.builderInfo.viewports.data());
+    pipe.builderInfo->viewports[0].width = static_cast<float>(pipe.swapChain.swapChainExtent.width);
+    pipe.builderInfo->viewports[0].height = static_cast<float>(pipe.swapChain.swapChainExtent.height);
+    vkCmdSetViewport(commandBuffer, 0, pipe.builderInfo->viewports.size(), pipe.builderInfo->viewports.data());
 
     // pipe.scissors.clear();
     // pipe.buildScissor({0, 0}, pipe.swapChain.swapChainExtent);
-    pipe.builderInfo.scissors[0].extent = pipe.swapChain.swapChainExtent;
-    vkCmdSetScissor(commandBuffer, 0, pipe.builderInfo.scissors.size(), pipe.builderInfo.scissors.data());
+    pipe.builderInfo->scissors[0].extent = pipe.swapChain.swapChainExtent;
+    vkCmdSetScissor(commandBuffer, 0, pipe.builderInfo->scissors.size(), pipe.builderInfo->scissors.data());
 
     //bind vertex buffers
     if (pipe.vertexBuffers.size() > 0) {
@@ -168,7 +168,7 @@ void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
         vkCmdBindIndexBuffer(commandBuffer, pipe.indexBufferInfo.buff, pipe.indexBufferInfo.offset, pipe.indexBufferInfo.type);
     }
 
-    for (uint32_t i = 0; i < pipe.descriptorSetLayouts.size(); i++) {
+    for (uint32_t i = 0; i < pipe.builderInfo->descriptorSetLayouts.size(); i++) {
         vkCmdBindDescriptorSets(commandBuffer,VK_PIPELINE_BIND_POINT_GRAPHICS,pipe.pipelineLayout,0,1,&pipe.descriptorSets[i][currentFrame],0,nullptr);
     }
 

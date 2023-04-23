@@ -28,7 +28,7 @@ void main() {
     gl_TessLevelOuter[1] = ubo.tessLevel;
     gl_TessLevelOuter[2] = ubo.tessLevel;
     gl_TessLevelOuter[3] = ubo.tessLevel;
-
+    
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
     outPosition[gl_InvocationID] = inPosition[gl_InvocationID];
     outColor[gl_InvocationID] = inColor[gl_InvocationID];

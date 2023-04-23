@@ -126,10 +126,10 @@ private:
     VkSampleCountFlagBits getMaxUsableSampleCount();
     //VKPHYSICALDEVICE END
 
-private:
     //VKDEVICE
     //sychronized queue class
 public:
+    inline VkSampleCountFlagBits getMaxMsaa() {return maxMsaa;}
     class svkqueue {
     private:
         friend class instance;

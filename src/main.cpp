@@ -1,3 +1,4 @@
+#include "svk_pipeline.hpp"
 #include <svklib.hpp>
 #include <iostream>
 #include <stdexcept>
@@ -16,12 +17,13 @@ struct Vertex {
     glm::vec2 texCoord;
 
     static std::vector<VkVertexInputBindingDescription> getBindingDescription() {
+        std::vector<VkVertexInputBindingDescription> bindingDescriptions;
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;
         bindingDescription.stride = sizeof(Vertex);
         bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX; //VK_VERTEX_INPUT_RATE_INSTANCE for instanced rendering
-
-        return std::vector<VkVertexInputBindingDescription>{bindingDescription};
+        bindingDescriptions.emplace_back(bindingDescription);
+        return bindingDescriptions;
     }
 
     static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() {
@@ -119,10 +121,7 @@ int main() {
     
         svklib::window win("Vulkan", 800, 600);
         svklib::instance inst(win);
-        svklib::swapchain swap(inst,3,VK_PRESENT_MODE_FIFO_KHR);
-        svklib::graphics::pipeline pipeline(inst,swap);
-        // svklib::compute::pipeline computePipeline(inst);
-        svklib::renderer render(inst,swap,pipeline);
+        svklib::swapchain swap(inst,3,inst.getMaxMsaa(),VK_PRESENT_MODE_FIFO_KHR);
 
         std::atomic_bool textureImageComplete(false);
         svklib::instance::svkimage textureImage;
@@ -137,28 +136,32 @@ int main() {
         glfwSetCursorPosCallback(win.win, mouse_callback);
         glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        auto vertexBindingDescriptions = Vertex::getBindingDescription(); 
+        auto vertexBindingDescriptions = Vertex::getBindingDescription();
         auto vertexAttributeDescriptions = Vertex::getAttributeDescriptions();
-        pipeline.buildVertexInputState(vertexBindingDescriptions, vertexAttributeDescriptions);
+        auto pipelineBuilder = svklib::graphics::pipeline::builder::begin(inst,swap);
+        pipelineBuilder.buildVertexInputState(vertexBindingDescriptions,vertexAttributeDescriptions)
+            .buildShader("res/shaders/simple_shader.vert.glsl",VK_SHADER_STAGE_VERTEX_BIT)
+            .buildShader("res/shaders/simple_shader.tesc.glsl",VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
+            .buildShader("res/shaders/simple_shader.tese.glsl",VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
+            .buildShader("res/shaders/simple_shader.frag.glsl",VK_SHADER_STAGE_FRAGMENT_BIT)
+            .buildDepthStencil()                                                              
+            .buildMultisampling()
+            .buildInputAssembly(VK_PRIMITIVE_TOPOLOGY_PATCH_LIST)
+            .buildDynamicState({VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR})
+            .buildRasterizer(VK_POLYGON_MODE_FILL, VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE)
+            .buildColorBlendAttachment(false)
+            .buildColorBlending()                                                        
+            .buildTessellationState(3)
+            .buildViewport(swap.swapChainExtent.width, swap.swapChainExtent.height)
+            .buildScissor({0,0}, {swap.swapChainExtent.width,swap.swapChainExtent.height})
+            .buildViewportState();
 
-        pipeline.buildShader("res/shaders/simple_shader.vert",VK_SHADER_STAGE_VERTEX_BIT);
-        pipeline.buildShader("res/shaders/simple_shader.tesc",VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT);
-        pipeline.buildShader("res/shaders/simple_shader.tese",VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT);
-        pipeline.buildShader("res/shaders/simple_shader.frag",VK_SHADER_STAGE_FRAGMENT_BIT);
-        
-        pipeline.buildInputAssembly(VK_PRIMITIVE_TOPOLOGY_PATCH_LIST);
-        pipeline.buildDynamicState({VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR});
-        pipeline.buildRasterizer(VK_POLYGON_MODE_FILL, VK_CULL_MODE_NONE, VK_FRONT_FACE_CLOCKWISE);
-        pipeline.buildMultisampling();
-        pipeline.buildDepthStencil();
-        pipeline.buildColorBlendAttachment(false);
-        pipeline.buildColorBlending();
-        pipeline.buildTessellationState(3);
-        pipeline.addToBuildQueue([&](){
-            pipeline.buildViewport(swap.swapChainExtent.width, swap.swapChainExtent.height);
-            pipeline.buildScissor({0,0}, {swap.swapChainExtent.width,swap.swapChainExtent.height});
-            pipeline.buildViewportState();
-        });
+        svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
+        svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
+        descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
+        descriptorBuilder.bind_image(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);
+        pipelineBuilder.addDescriptorSetLayout(descriptorBuilder.buildLayout());
+        auto pipeline = pipelineBuilder.buildPipeline(VK_NULL_HANDLE);
         
         svklib::instance::svkbuffer vertexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertices.size()*sizeof(Vertex), vertices.data());
         svklib::instance::svkbuffer indexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size()*sizeof(uint16_t), indices.data());
@@ -174,14 +177,6 @@ int main() {
         pipeline.vertexBufferOffsets.push_back(0);
         pipeline.indexBufferInfo = indexBuffer.getIndexBufferInfo(VK_INDEX_TYPE_UINT16);
 
-        pipeline.descriptorSetLayouts.resize(1);
-        svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
-        svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
-        descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
-        descriptorBuilder.bind_image(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);
-        pipeline.descriptorSetLayouts[0] = descriptorBuilder.buildLayout();
-
-        pipeline.buildPipeline();
         
         pipeline.descriptorSets.resize(1);
         pipeline.descriptorSets[0].resize(swap.framesInFlight);
@@ -197,12 +192,7 @@ int main() {
             pipeline.descriptorSets[0][i] = descriptorBuilder.buildSet();
         }
 
-        // glm::vec4 pushConstantData = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        // pipeline.pushConstantRange.size = sizeof(glm::vec4);
-        // pipeline.pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        // pipeline.pushConstantRange.offset = 0;
-        // pipeline.pushConstantData = &pushConstantData;
-        // pipeline.pushConstantCount = 1;
+        svklib::renderer render(inst,swap,pipeline);
         
 
         auto end = std::chrono::high_resolution_clock::now();

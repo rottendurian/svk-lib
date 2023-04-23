@@ -2,20 +2,25 @@
 #define SVKLIB_SWAPCHAIN_CPP
 
 #include "svk_swapchain.hpp"
+#include "vulkan/vulkan_core.h"
+#include <stdexcept>
 
 namespace svklib {
 
-swapchain::swapchain(instance& inst,int framesInFlight) 
-    : inst(inst), framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
+swapchain::swapchain(instance& inst,int framesInFlight,VkSampleCountFlagBits samples) 
+    : inst(inst),samples(samples),framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
       preferredPresentMode(VK_PRESENT_MODE_MAILBOX_KHR) 
 {
+    if (samples > inst.maxMsaa) {
+        throw std::runtime_error("swapchain samples cannot be higher than physical device capabilities");
+    }
     createVKSwapChain();
     createImageViews();
     allocateCommandBuffers();
 }
 
-swapchain::swapchain(instance& inst,int framesInFlight,VkPresentModeKHR presentMode) 
-    : inst(inst), framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
+swapchain::swapchain(instance& inst,int framesInFlight,VkSampleCountFlagBits samples,VkPresentModeKHR presentMode) 
+    : inst(inst),framesInFlight(framesInFlight),samples(samples),commandPool(inst.getCommandPool()),
       preferredPresentMode(presentMode)
 {
     createVKSwapChain();

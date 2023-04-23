@@ -29,7 +29,7 @@ void main() {
     //sample texture for the blue channel and add to the y position based on the color
     float texSample = texture(tex, texCoord).b;
     position.z += (texSample*1.5);
-
+    
     gl_Position = ubo.proj * ubo.view * ubo.model * vec4(position, 1.0);
     outPosition = position;
     outColor = color;
