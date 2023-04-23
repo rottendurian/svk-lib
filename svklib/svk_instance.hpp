@@ -39,14 +39,15 @@ class instance {
     friend class graphics::pipeline;
     friend class renderer;
 public:
-    instance(window& win);
-    instance(window& win, VkPhysicalDeviceFeatures& enabledFeatures);
+    instance(window& win,uint32_t apiVersion);
+    instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures& enabledFeatures);
     ~instance();
 
     inline void waitForDeviceIdle() { vkDeviceWaitIdle(device); }
     
-private:
+    const uint32_t apiVersion;
 
+private:
     //references
     window& win;
     //references end
@@ -76,7 +77,7 @@ public:
     //VKINSTANCE
     VkInstance inst;
 private:
-    void createInstance(const char *engineName,const char* appName,unsigned int engineVersion,unsigned int appVersion);
+    void createInstance(const char *engineName,const char* appName,unsigned int engineVersion,unsigned int appVersion,unsigned int apiVersion);
     void destroyInstance();
 
     std::vector<const char*> getRequiredExtensions();

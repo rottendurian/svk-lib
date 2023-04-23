@@ -127,15 +127,15 @@ pipeline::builder& pipeline::builder::buildShader(const char *path, VkShaderStag
     return *this;
 }
 
-pipeline::builder& pipeline::builder::buildVertexInputState(std::vector<VkVertexInputBindingDescription>& descriptions,std::vector<VkVertexInputAttributeDescription>& attributes) {
-    //info->descriptions = descriptions;
-    //info->attributes = attributes;
-    addToBuildQueue([this,&descriptions,&attributes](){
+pipeline::builder& pipeline::builder::buildVertexInputState(std::vector<VkVertexInputBindingDescription> descriptions,std::vector<VkVertexInputAttributeDescription> attributes) {
+    info->descriptions = descriptions;
+    info->attributes = attributes;
+    addToBuildQueue([this](){
         info->vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        info->vertexInputState.vertexBindingDescriptionCount = descriptions.size();
-        info->vertexInputState.pVertexBindingDescriptions = descriptions.data();
-        info->vertexInputState.vertexAttributeDescriptionCount = attributes.size();
-        info->vertexInputState.pVertexAttributeDescriptions = attributes.data();
+        info->vertexInputState.vertexBindingDescriptionCount = info->descriptions.size();
+        info->vertexInputState.pVertexBindingDescriptions = info->descriptions.data();
+        info->vertexInputState.vertexAttributeDescriptionCount = info->attributes.size();
+        info->vertexInputState.pVertexAttributeDescriptions = info->attributes.data();
 
         info->pipelineInfo.pVertexInputState = &info->vertexInputState;
     });

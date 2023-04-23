@@ -120,26 +120,15 @@ int main() {
         auto start = std::chrono::high_resolution_clock::now();
     
         svklib::window win("Vulkan", 800, 600);
-        svklib::instance inst(win);
-        svklib::swapchain swap(inst,3,VK_SAMPLE_COUNT_1_BIT,VK_PRESENT_MODE_FIFO_KHR);
-
-        std::atomic_bool textureImageComplete(false);
-        svklib::instance::svkimage textureImage;
-        threadPool->add_task([&](){
-            textureImage = inst.create2DImageFromFile("res/textures/perlin.bmp",4);
-            // textureImage = inst.create2DImageFromFile("res/textures/bluetreesforest.jpg",5,tempCommandPool);
-            inst.createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
-            inst.createSampler(textureImage,VK_FILTER_LINEAR,VK_SAMPLER_ADDRESS_MODE_REPEAT);
-        },&textureImageComplete);
-
         win.setWindowUserPointer(&camera);
         glfwSetCursorPosCallback(win.win, mouse_callback);
         glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        auto vertexBindingDescriptions = Vertex::getBindingDescription();
-        auto vertexAttributeDescriptions = Vertex::getAttributeDescriptions();
+        svklib::instance inst(win,VK_API_VERSION_1_3);
+        svklib::swapchain swap(inst,3,VK_SAMPLE_COUNT_8_BIT,VK_PRESENT_MODE_FIFO_KHR);
+
         auto pipelineBuilder = svklib::graphics::pipeline::builder::begin(inst,swap);
-        pipelineBuilder.buildVertexInputState(vertexBindingDescriptions,vertexAttributeDescriptions)
+        pipelineBuilder.buildVertexInputState(Vertex::getBindingDescription(),Vertex::getAttributeDescriptions())
             .buildShader("res/shaders/simple_shader.vert.glsl",VK_SHADER_STAGE_VERTEX_BIT)
             .buildShader("res/shaders/simple_shader.tesc.glsl",VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
             .buildShader("res/shaders/simple_shader.tese.glsl",VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
@@ -163,6 +152,10 @@ int main() {
         pipelineBuilder.addDescriptorSetLayout(descriptorBuilder.buildLayout());
         svklib::graphics::pipeline pipeline = pipelineBuilder.buildPipeline(VK_NULL_HANDLE);
         
+        svklib::instance::svkimage textureImage = inst.create2DImageFromFile("res/textures/perlin.bmp",4);
+        inst.createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_VIEW_TYPE_2D, VK_IMAGE_ASPECT_COLOR_BIT);
+        inst.createSampler(textureImage,VK_FILTER_LINEAR,VK_SAMPLER_ADDRESS_MODE_REPEAT);
+        
         svklib::instance::svkbuffer vertexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertices.size()*sizeof(Vertex), vertices.data());
         svklib::instance::svkbuffer indexBuffer = inst.createBufferStaged(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indices.size()*sizeof(uint16_t), indices.data());
         
@@ -177,23 +170,17 @@ int main() {
         pipeline.vertexBufferOffsets.push_back(0);
         pipeline.indexBufferInfo = indexBuffer.getIndexBufferInfo(VK_INDEX_TYPE_UINT16);
 
-        
         pipeline.descriptorSets.resize(1);
-        pipeline.descriptorSets[0].resize(swap.framesInFlight);
 
-        while (!textureImageComplete.load()) {
-            std::this_thread::yield();
-        }
         VkDescriptorImageInfo imageInfo = textureImage.getImageInfo();
 
         descriptorBuilder.update_image(1,&imageInfo);
         for (uint32_t i = 0; i < swap.framesInFlight; i++) {
             descriptorBuilder.update_buffer(0,&bufferInfo[i]);
-            pipeline.descriptorSets[0][i] = descriptorBuilder.buildSet();
+            pipeline.descriptorSets[0].emplace_back(descriptorBuilder.buildSet());
         }
 
         svklib::renderer render(inst,swap,pipeline);
-        
 
         auto end = std::chrono::high_resolution_clock::now();
         double svktime = std::chrono::duration<double>(end - start).count();

@@ -99,7 +99,7 @@ namespace graphics {
             public:
                 static builder begin(instance& inst, swapchain& swapChain);
                 builder& buildShader(const char* path, VkShaderStageFlagBits stage);
-                builder& buildVertexInputState(std::vector<VkVertexInputBindingDescription>& descriptions,std::vector<VkVertexInputAttributeDescription>& attributes);
+                builder& buildVertexInputState(std::vector<VkVertexInputBindingDescription> descriptions,std::vector<VkVertexInputAttributeDescription> attributes);
                 builder& buildInputAssembly(VkPrimitiveTopology primitive);
                 builder& buildRasterizer(VkPolygonMode polygonMode, VkCullModeFlags cullMode, VkFrontFace frontFace);
                 builder& buildDepthStencil();

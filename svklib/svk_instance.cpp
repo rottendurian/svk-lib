@@ -2,6 +2,7 @@
 #define SVKLIB_INSTANCE_CPP
 
 #include "svk_instance.hpp"
+#include "svk_shader.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -13,10 +14,10 @@ namespace svklib {
 static constexpr int deviceExtensionsCount = 1;
 static constexpr const char* deviceExtensions[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-instance::instance(window &win)
-    : win(win), enabledFeatures(nullptr)
+instance::instance(window &win,uint32_t apiVersion)
+    : win(win),apiVersion(apiVersion),enabledFeatures(nullptr)
 {
-    createInstance("svklib","svklib",1,1);
+    createInstance("svklib","svklib",1,1,apiVersion);
     createDebugMessenger();
     createSurface();
     pickPhysicalDevice();
@@ -28,16 +29,15 @@ instance::instance(window &win)
     glslang::InitializeProcess();
 }
 
-instance::instance(window &win, VkPhysicalDeviceFeatures& enabledFeatures)
-    :win(win), enabledFeatures(&enabledFeatures)
+instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures& enabledFeatures)
+    :win(win),apiVersion(apiVersion),enabledFeatures(&enabledFeatures)
 {
-    createInstance("svklib","svklib",1,1);
+    createInstance("svklib","svklib",1,1,apiVersion);
     createDebugMessenger();
     createSurface();
     pickPhysicalDevice();
     createLogicalDevice();
     createAllocator();
-    // internalCommandPool = createCommandPool();
     createCommandPools(std::thread::hardware_concurrency());
     descriptorAllocator = descriptor::allocator::init(device);
     descriptorLayoutCache.init(device);
@@ -49,7 +49,6 @@ instance::~instance() {
     delete descriptorAllocator;
     descriptorLayoutCache.cleanup();
     cleanupDeletionQueue();
-    // vkDestroyCommandPool(device,internalCommandPool,nullptr);
     destroyCommandPools();
     destroyAllocator();
     destroyLogicalDevice();
@@ -60,7 +59,7 @@ instance::~instance() {
 
 //VKINSTANCE
 
-void instance::createInstance(const char *engineName,const char* appName,unsigned int engineVersion,unsigned int appVersion) {
+void instance::createInstance(const char *engineName,const char* appName,unsigned int engineVersion,unsigned int appVersion,unsigned int apiVersion) {
     if (enableValidationLayers && !checkValidationLayerSupport()) {
         throw std::runtime_error("Validation layers requested but not supported");
     }
@@ -71,7 +70,9 @@ void instance::createInstance(const char *engineName,const char* appName,unsigne
     appInfo.applicationVersion = appVersion;
     appInfo.pEngineName = engineName;
     appInfo.engineVersion = engineVersion;
-    appInfo.apiVersion = VK_API_VERSION_1_0;
+    appInfo.apiVersion = apiVersion;
+
+    shader::setShaderVersion(apiVersion);
 
     VkInstanceCreateInfo createInfo; memset(&createInfo,0,sizeof(createInfo));
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

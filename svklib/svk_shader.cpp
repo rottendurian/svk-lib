@@ -2,8 +2,14 @@
 #define SVKLIB_SHADER_CPP
 
 #include "svk_shader.hpp"
+#include "glslang/Public/ShaderLang.h"
+#include "vulkan/vulkan_core.h"
+#include <stdexcept>
 
 namespace svklib {
+
+static glslang::EShTargetClientVersion eshTargetClientVersion = glslang::EShTargetVulkan_1_0;
+static glslang::EShTargetLanguageVersion eshTargetLanguageVersion = glslang::EShTargetSpv_1_0; 
 
 //shader class
 shader::shader(const char* path, EShLanguage stage) {
@@ -43,9 +49,7 @@ shader::shader(const char* path, EShLanguage stage) {
     compileShader(stage,path,cSpvPath);
 }
 
-shader::~shader() {
-
-}
+shader::~shader() = default; 
 
 std::vector<uint32_t> shader::getSpirvCode()
 {
@@ -93,6 +97,29 @@ void shader::saveSpvCode(const char* file) {
     fclose(handle);
 }
 
+void shader::setShaderVersion(uint32_t apiVersion)
+{
+    switch(apiVersion) {
+        case VK_API_VERSION_1_0:
+            eshTargetClientVersion = glslang::EShTargetVulkan_1_0;
+            eshTargetLanguageVersion = glslang::EShTargetSpv_1_0; 
+            break;
+        case VK_API_VERSION_1_1:
+            eshTargetClientVersion = glslang::EShTargetVulkan_1_1;
+            eshTargetLanguageVersion = glslang::EShTargetSpv_1_1; 
+            break;
+        case VK_API_VERSION_1_2:
+            eshTargetClientVersion = glslang::EShTargetVulkan_1_2;
+            eshTargetLanguageVersion = glslang::EShTargetSpv_1_2; 
+            break;
+        case VK_API_VERSION_1_3:
+            eshTargetClientVersion = glslang::EShTargetVulkan_1_3;
+            eshTargetLanguageVersion = glslang::EShTargetSpv_1_3; 
+            break;
+        default:
+            throw std::runtime_error("Invalid vulkan version");
+    }
+}
 void shader::compileShader(EShLanguage stage, const char* path, const char* cSpvPath)
 {
 
@@ -102,8 +129,8 @@ void shader::compileShader(EShLanguage stage, const char* path, const char* cSpv
 
     glslang::TShader shader(stage);
     shader.setEnvInput(glslang::EShSourceGlsl, stage, glslang::EShClientVulkan, 100);
-    shader.setEnvClient(glslang::EShClientVulkan, glslang::EShTargetVulkan_1_0);
-    shader.setEnvTarget(glslang::EShTargetSpv, glslang::EShTargetSpv_1_0);
+    shader.setEnvClient(glslang::EShClientVulkan, eshTargetClientVersion);
+    shader.setEnvTarget(glslang::EShTargetSpv, eshTargetLanguageVersion);
 
     std::string source = getSourceCode(path);
     const char* cSource = source.c_str();

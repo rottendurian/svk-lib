@@ -21,6 +21,8 @@ public:
     // shader(std::initializer_list<const char*> paths, EShLanguage stage); //todo figure out why this doesn't work
     ~shader();
 
+    static void setShaderVersion(uint32_t apiVersion);
+
     std::vector<uint32_t> getSpirvCode();
     VkShaderModule createShaderModule(VkDevice device);
 
