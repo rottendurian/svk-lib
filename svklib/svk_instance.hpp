@@ -1,7 +1,6 @@
 #ifndef SVKLIB_INSTANCE_HPP
 #define SVKLIB_INSTANCE_HPP
 
-// #include "pch.hpp"
 #include "svk_window.hpp"
 #include "svk_descriptor.hpp"
 #include "svk_threadpool.hpp"
@@ -40,7 +39,7 @@ class instance {
     friend class renderer;
 public:
     instance(window& win,uint32_t apiVersion);
-    instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures& enabledFeatures);
+    instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures);
     ~instance();
 
     inline void waitForDeviceIdle() { vkDeviceWaitIdle(device); }
@@ -127,10 +126,12 @@ private:
     VkSampleCountFlagBits getMaxUsableSampleCount();
     //VKPHYSICALDEVICE END
 
-    //VKDEVICE
-    //sychronized queue class
 public:
     inline VkSampleCountFlagBits getMaxMsaa() {return maxMsaa;}
+    //VKDEVICE
+    VkDevice device;
+
+    //sychronized queue class
     class svkqueue {
     private:
         friend class instance;
@@ -146,7 +147,6 @@ public:
         VkResult present(const VkPresentInfoKHR* presentInfo);
         VkResult waitIdle();
     };
-    VkDevice device;
 
     svkqueue graphicsQueue;
     svkqueue presentQueue;
@@ -187,7 +187,8 @@ private:
     VkCommandPool createCommandPool();
     void destroyCommandPool(VkCommandPool commandPool);
 
-    VkPhysicalDeviceFeatures* enabledFeatures;
+    std::unique_ptr<VkPhysicalDeviceFeatures> requestedFeatures;
+    bool areAllFeaturesSupported(); 
     void createLogicalDevice();
     void destroyLogicalDevice();
     //VDEVICE END

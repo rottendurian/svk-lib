@@ -3,6 +3,7 @@
 
 #include "svk_instance.hpp"
 #include "svk_shader.hpp"
+#include <memory>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -15,7 +16,7 @@ static constexpr int deviceExtensionsCount = 1;
 static constexpr const char* deviceExtensions[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 instance::instance(window &win,uint32_t apiVersion)
-    : win(win),apiVersion(apiVersion),enabledFeatures(nullptr)
+    : win(win),apiVersion(apiVersion),requestedFeatures(nullptr)
 {
     createInstance("svklib","svklib",1,1,apiVersion);
     createDebugMessenger();
@@ -29,8 +30,8 @@ instance::instance(window &win,uint32_t apiVersion)
     glslang::InitializeProcess();
 }
 
-instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures& enabledFeatures)
-    :win(win),apiVersion(apiVersion),enabledFeatures(&enabledFeatures)
+instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures)
+    :win(win),apiVersion(apiVersion),requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures))
 {
     createInstance("svklib","svklib",1,1,apiVersion);
     createDebugMessenger();
@@ -498,14 +499,88 @@ void instance::destroyCommandPool(VkCommandPool commandPool)
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
+#define CHECK_VKDEVICE_FEATURE(feature) { \
+    if (supportedFeatures.feature == false && requestedFeatures->feature == true) { \
+        allFeaturesSupported = false; \
+        std::string std_error_msg = "Device feature " + std::string(#feature) + " is not supported by this device"; \
+        throw std::runtime_error(std_error_msg); \
+    } \
+} \
+
+bool instance::areAllFeaturesSupported() {
+    bool allFeaturesSupported = true;
+
+    if (requestedFeatures == nullptr) 
+        return allFeaturesSupported;
+
+    VkPhysicalDeviceFeatures supportedFeatures;
+    vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
+
+    CHECK_VKDEVICE_FEATURE(robustBufferAccess);
+    CHECK_VKDEVICE_FEATURE(fullDrawIndexUint32);
+    CHECK_VKDEVICE_FEATURE(imageCubeArray);
+    CHECK_VKDEVICE_FEATURE(independentBlend);
+    CHECK_VKDEVICE_FEATURE(geometryShader);
+    CHECK_VKDEVICE_FEATURE(tessellationShader);
+    CHECK_VKDEVICE_FEATURE(sampleRateShading);
+    CHECK_VKDEVICE_FEATURE(dualSrcBlend);
+    CHECK_VKDEVICE_FEATURE(logicOp);
+    CHECK_VKDEVICE_FEATURE(multiDrawIndirect);
+    CHECK_VKDEVICE_FEATURE(drawIndirectFirstInstance);
+    CHECK_VKDEVICE_FEATURE(depthClamp);
+    CHECK_VKDEVICE_FEATURE(depthBiasClamp);
+    CHECK_VKDEVICE_FEATURE(fillModeNonSolid);
+    CHECK_VKDEVICE_FEATURE(depthBounds);
+    CHECK_VKDEVICE_FEATURE(wideLines);
+    CHECK_VKDEVICE_FEATURE(largePoints);
+    CHECK_VKDEVICE_FEATURE(alphaToOne);
+    CHECK_VKDEVICE_FEATURE(multiViewport);
+    CHECK_VKDEVICE_FEATURE(samplerAnisotropy);
+    CHECK_VKDEVICE_FEATURE(textureCompressionETC2);
+    CHECK_VKDEVICE_FEATURE(textureCompressionASTC_LDR);
+    CHECK_VKDEVICE_FEATURE(textureCompressionBC);
+    CHECK_VKDEVICE_FEATURE(occlusionQueryPrecise);
+    CHECK_VKDEVICE_FEATURE(pipelineStatisticsQuery);
+    CHECK_VKDEVICE_FEATURE(vertexPipelineStoresAndAtomics);
+    CHECK_VKDEVICE_FEATURE(fragmentStoresAndAtomics);
+    CHECK_VKDEVICE_FEATURE(shaderTessellationAndGeometryPointSize);
+    CHECK_VKDEVICE_FEATURE(shaderImageGatherExtended);
+    CHECK_VKDEVICE_FEATURE(shaderStorageImageExtendedFormats);
+    CHECK_VKDEVICE_FEATURE(shaderStorageImageMultisample);
+    CHECK_VKDEVICE_FEATURE(shaderStorageImageReadWithoutFormat);
+    CHECK_VKDEVICE_FEATURE(shaderStorageImageWriteWithoutFormat);
+    CHECK_VKDEVICE_FEATURE(shaderUniformBufferArrayDynamicIndexing);
+    CHECK_VKDEVICE_FEATURE(shaderSampledImageArrayDynamicIndexing);
+    CHECK_VKDEVICE_FEATURE(shaderStorageBufferArrayDynamicIndexing);
+    CHECK_VKDEVICE_FEATURE(shaderStorageImageArrayDynamicIndexing);
+    CHECK_VKDEVICE_FEATURE(shaderClipDistance);
+    CHECK_VKDEVICE_FEATURE(shaderCullDistance);
+    CHECK_VKDEVICE_FEATURE(shaderFloat64);
+    CHECK_VKDEVICE_FEATURE(shaderInt64);
+    CHECK_VKDEVICE_FEATURE(shaderInt16);
+    CHECK_VKDEVICE_FEATURE(shaderResourceResidency);
+    CHECK_VKDEVICE_FEATURE(shaderResourceMinLod);
+    CHECK_VKDEVICE_FEATURE(sparseBinding);
+    CHECK_VKDEVICE_FEATURE(sparseResidencyBuffer);
+    CHECK_VKDEVICE_FEATURE(sparseResidencyImage2D);
+    CHECK_VKDEVICE_FEATURE(sparseResidencyImage3D);
+    CHECK_VKDEVICE_FEATURE(sparseResidency2Samples);
+    CHECK_VKDEVICE_FEATURE(sparseResidency4Samples);
+    CHECK_VKDEVICE_FEATURE(sparseResidency8Samples);
+    CHECK_VKDEVICE_FEATURE(sparseResidency16Samples);
+    CHECK_VKDEVICE_FEATURE(sparseResidencyAliased);
+    CHECK_VKDEVICE_FEATURE(variableMultisampleRate);
+    CHECK_VKDEVICE_FEATURE(inheritedQueries);
+
+    return allFeaturesSupported;
+}
+
 void instance::createLogicalDevice() {
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
     std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
-
     
-
     float queuePriority = 1.0f;
     for (uint32_t queueFamily : uniqueQueueFamilies) {
         VkDeviceQueueCreateInfo queueCreateInfo{};
@@ -515,23 +590,15 @@ void instance::createLogicalDevice() {
         queueCreateInfo.pQueuePriorities = &queuePriority;
         queueCreateInfos.push_back(queueCreateInfo);
     }
-
-    VkPhysicalDeviceFeatures queryDeviceFeatures{};
-    vkGetPhysicalDeviceFeatures(physicalDevice, &queryDeviceFeatures);
-
-    if (queryDeviceFeatures.tessellationShader == VK_FALSE) {
-        throw std::runtime_error("tessellationShader not supported!");
-    }
-
-    VkPhysicalDeviceFeatures deviceFeatures{};
-    deviceFeatures.tessellationShader = VK_TRUE;
+   
+    areAllFeaturesSupported();
 
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     createInfo.pQueueCreateInfos = queueCreateInfos.data();
     createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 
-    createInfo.pEnabledFeatures = &deviceFeatures;
+    createInfo.pEnabledFeatures = requestedFeatures.get();
 
     // createInfo.enabledExtensionCount = 0;
     createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensionsCount);

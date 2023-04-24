@@ -124,7 +124,9 @@ int main() {
         glfwSetCursorPosCallback(win.win, mouse_callback);
         glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        svklib::instance inst(win,VK_API_VERSION_1_3);
+        svklib::instance inst(win,VK_API_VERSION_1_3,
+                {.tessellationShader = VK_TRUE} 
+            );
         svklib::swapchain swap(inst,3,VK_SAMPLE_COUNT_8_BIT,VK_PRESENT_MODE_FIFO_KHR);
 
         auto pipelineBuilder = svklib::graphics::pipeline::builder::begin(inst,swap);
