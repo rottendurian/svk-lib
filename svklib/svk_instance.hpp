@@ -112,6 +112,7 @@ private:
 
     void createSurface();
     void pickPhysicalDevice();
+    int ratePhysicalDevice(VkPhysicalDevice physicalDevice);
     bool isDeviceSuitable(VkPhysicalDevice physicalDevice);
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice physicalDevice);
     bool checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
@@ -188,7 +189,7 @@ private:
     void destroyCommandPool(VkCommandPool commandPool);
 
     std::unique_ptr<VkPhysicalDeviceFeatures> requestedFeatures;
-    bool areAllFeaturesSupported(); 
+    int getSupportedFeatureScore(VkPhysicalDevice physicalDevice); 
     void createLogicalDevice();
     void destroyLogicalDevice();
     //VDEVICE END

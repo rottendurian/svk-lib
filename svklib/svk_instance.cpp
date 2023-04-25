@@ -2,7 +2,9 @@
 #define SVKLIB_INSTANCE_CPP
 
 #include "svk_instance.hpp"
+
 #include "svk_shader.hpp"
+#include "vulkan/vulkan_core.h"
 #include <memory>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -221,7 +223,7 @@ void instance::createSurface() {
 void instance::pickPhysicalDevice() {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(inst, &deviceCount, nullptr);
-    
+
     if (deviceCount == 0) {
         throw std::runtime_error("failed to find GPUs with Vulkan support!");
     }
@@ -229,7 +231,15 @@ void instance::pickPhysicalDevice() {
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(inst, &deviceCount, devices.data());
 
-    for (const auto& d : devices) {
+    std::multimap<int, VkPhysicalDevice> deviceRatings;
+    //rate physicalDevice
+    for (const auto& device : devices) {
+        int score = ratePhysicalDevice(device);
+        deviceRatings.insert(std::make_pair(score, device));
+    }
+
+    for (auto device = deviceRatings.rbegin(); device != deviceRatings.rend(); device++) {
+        VkPhysicalDevice d = device->second;
         if (isDeviceSuitable(d)) {
             physicalDevice = d;
             maxMsaa = getMaxUsableSampleCount();
@@ -240,6 +250,40 @@ void instance::pickPhysicalDevice() {
     if (physicalDevice == VK_NULL_HANDLE) {
         throw std::runtime_error("failed to find a suitable GPU!");
     }
+}
+
+int instance::ratePhysicalDevice(VkPhysicalDevice physicalDevice) {
+    int score = getSupportedFeatureScore(physicalDevice);
+    if (score == 0) return 0;
+    
+    VkPhysicalDeviceProperties properties;
+    vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+
+    switch (properties.deviceType) {
+        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU:
+            score+=1200;
+            break;
+        case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU:
+            score+=600;
+            break;
+        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU:
+            score+=300;
+            break;
+        case VK_PHYSICAL_DEVICE_TYPE_CPU:
+            score+=10;
+            break;
+        case VK_PHYSICAL_DEVICE_TYPE_OTHER:
+            score+=1;
+            break;
+        default:
+            score = 0;
+            return score;
+            break;
+    }
+#ifdef _DEBUG 
+    std::cout << "Device: " + std::string(properties.deviceName) + " score: " + std::to_string(score) << std::endl;
+#endif
+    return score;
 }
 
 bool instance::isDeviceSuitable(VkPhysicalDevice physicalDevice) {
@@ -499,19 +543,27 @@ void instance::destroyCommandPool(VkCommandPool commandPool)
     vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
+#define VKDEVICE_ERROR_CHECK(feature) \
+        std::string std_error_msg = "Device feature " + std::string(feature) + " is not supported by this device"; \
+        throw std::runtime_error(std_error_msg); \
+
 #define CHECK_VKDEVICE_FEATURE(feature) { \
     if (supportedFeatures.feature == false && requestedFeatures->feature == true) { \
-        allFeaturesSupported = false; \
-        std::string std_error_msg = "Device feature " + std::string(#feature) + " is not supported by this device"; \
-        throw std::runtime_error(std_error_msg); \
+        return 0; \
+    } else { \
+        if (requestedFeatures->feature == true) \
+            featuresScore += 100; \
+        else { \
+            featuresScore += 10; \
+        } \
     } \
 } \
 
-bool instance::areAllFeaturesSupported() {
-    bool allFeaturesSupported = true;
+int instance::getSupportedFeatureScore(VkPhysicalDevice physicalDevice) {
+    int featuresScore = 0;
 
     if (requestedFeatures == nullptr) 
-        return allFeaturesSupported;
+        return featuresScore;
 
     VkPhysicalDeviceFeatures supportedFeatures;
     vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
@@ -572,7 +624,7 @@ bool instance::areAllFeaturesSupported() {
     CHECK_VKDEVICE_FEATURE(variableMultisampleRate);
     CHECK_VKDEVICE_FEATURE(inheritedQueries);
 
-    return allFeaturesSupported;
+    return featuresScore;
 }
 
 void instance::createLogicalDevice() {
@@ -591,7 +643,7 @@ void instance::createLogicalDevice() {
         queueCreateInfos.push_back(queueCreateInfo);
     }
    
-    areAllFeaturesSupported();
+    //areAllFeaturesSupported(physicalDevice);
 
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
