@@ -1,11 +1,6 @@
 #ifndef SVKLIB_WINDOW_HPP
 #define SVKLIB_WINDOW_HPP
 
-#define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
-
-// #include "pch.hpp"
-
 namespace svklib {
 
 class instance;

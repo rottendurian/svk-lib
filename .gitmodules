@@ -13,3 +13,6 @@
 [submodule "svklib/dep/vma"]
 	path = svklib/dep/vma
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "dep/glm"]
+	path = dep/glm
+	url = https://github.com/g-truc/glm.git

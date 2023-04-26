@@ -2,6 +2,7 @@
 #define SVKLIB_WINDOW_CPP
 
 #include "svk_window.hpp"
+#include <stdexcept>
 
 namespace svklib {
 
@@ -12,6 +13,16 @@ void window::frameBufferResizeCallBack(GLFWwindow* glfwwindow, int width, int he
 
 window::window(const char* name, int width, int height) {
     glfwInit();
+    // Enable window decorations (title bar, min/max/close buttons)
+    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+
+    // Enable window resizing
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+    // Enable window minimization/maximization
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
+    glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
+
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     win = glfwCreateWindow(width, height, name, nullptr, nullptr);

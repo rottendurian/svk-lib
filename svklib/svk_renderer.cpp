@@ -22,12 +22,14 @@ void sync::syncFrame(const int frame)
 {
     vkWaitForFences(inst.device, 1, &inFlightFence[frame], VK_TRUE, UINT64_MAX);
     vkResetFences(inst.device, 1, &inFlightFence[frame]);
-    
 }
 
 VkResult sync::acquireNextImage(const int frame, VkSwapchainKHR swapChain, uint32_t& imageIndex)
 {
-    return vkAcquireNextImageKHR(inst.device, swapChain, UINT64_MAX, imageAvailableSemaphore[frame], VK_NULL_HANDLE, &imageIndex);
+    vkWaitForFences(inst.device, 1, &inFlightFence[frame], VK_TRUE, UINT64_MAX);
+    VkResult result = vkAcquireNextImageKHR(inst.device, swapChain, UINT64_MAX, imageAvailableSemaphore[frame], VK_NULL_HANDLE, &imageIndex);
+    vkResetFences(inst.device, 1, &inFlightFence[frame]);
+    return result;
 }
 
 void sync::submitFrame(const int frame, const uint32_t commandBufferCount, VkCommandBuffer* commandBuffers, instance::svkqueue& queue) 
@@ -191,7 +193,7 @@ void renderer::recordDrawCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 }
 
 void renderer::drawFrame() {
-    sync.syncFrame(currentFrame);
+    //sync.syncFrame(currentFrame);
 
     uint32_t imageIndex;
     
@@ -202,7 +204,6 @@ void renderer::drawFrame() {
     } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         throw std::runtime_error("failed to acquire swap chain image!");
     }
-
 
     vkResetCommandBuffer(swap.commandBuffers[currentFrame], 0);
     
