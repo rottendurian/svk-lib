@@ -235,7 +235,9 @@ public:
     svkimage create2DImageFromFile(const char* file,uint32_t mipLevels,VkCommandPool commandPool);
     svkimage create2DImageFromFile(const char* file,uint32_t mipLevels);
 
-    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent,VkCommandPool commandPool); //TODO 
+    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent,VkCommandPool commandPool); //UNTESTED
+    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent); //UNTESTED
+
     void createImageView(svkimage& image, VkFormat format, VkImageViewType viewType,VkImageAspectFlags aspectFlags);
     void createSampler(svkimage& image, VkFilter mFilter,VkSamplerAddressMode samplerAddressMode);
     void generateMipmaps(svkimage& image, VkFormat imageFormat, VkOffset3D texSize,VkCommandPool commandPool);

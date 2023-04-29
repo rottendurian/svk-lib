@@ -287,7 +287,6 @@ int instance::ratePhysicalDevice(VkPhysicalDevice physicalDevice) {
     }
 
     static constexpr double memoryScoreMultiplier = 20.0;
-
     score += static_cast<int>((static_cast<double>(deviceMemory) / 1000000000.0 * memoryScoreMultiplier) + 0.5);
 
     VkPhysicalDeviceProperties properties;
@@ -314,6 +313,7 @@ int instance::ratePhysicalDevice(VkPhysicalDevice physicalDevice) {
             return score;
             break;
     }
+
 #ifdef _DEBUG 
     std::cout << "Device: " + std::string(properties.deviceName) + " score: " + std::to_string(score) << std::endl;
     std::cout << "Device memory score " << (static_cast<double>(deviceMemory) / 1000000000.0 * memoryScoreMultiplier) << std::endl;
@@ -921,6 +921,34 @@ void instance::copyBufferToImage(instance::svkbuffer& buffer,instance::svkimage&
 void instance::copyBufferToImage(instance::svkbuffer& buffer,instance::svkimage& image, VkExtent3D extent) {
     CommandPool commandPool = getCommandPool();
     copyBufferToImage(buffer,image,extent,commandPool.get());
+}
+
+void instance::copyImageToImage(instance::svkimage& src, instance::svkimage& dst, VkExtent3D extent,VkCommandPool commandPool)  {
+    VkCommandBuffer commandBuffer = beginSingleTimeCommands(commandPool);
+
+    VkImageCopy region{};
+    region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.srcSubresource.layerCount = 1;
+    region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.dstSubresource.layerCount = 1;
+    region.extent = extent; 
+
+    vkCmdCopyImage(
+        commandBuffer,
+        src.image,
+        VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        dst.image,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        1,
+        &region
+    );
+
+    endSingleTimeCommands(commandPool,commandBuffer);
+}
+
+void instance::copyImageToImage(instance::svkimage &src, instance::svkimage &dst, VkExtent3D extent) {
+    CommandPool commandPool = getCommandPool();
+    copyImageToImage(src,dst,extent,commandPool.get());
 }
 
 instance::svkimage instance::createImageStaged(VkImageCreateInfo imageInfo, VmaAllocationCreateInfo allocInfo, VkCommandPool commandPool, const void *data)
