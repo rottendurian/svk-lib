@@ -1212,8 +1212,6 @@ void instance::endSingleTimeCommands(VkCommandPool commandPool,VkCommandBuffer c
         throw std::runtime_error("Failed to submit queue (endSingleTimeCommands)");
     }
     graphicsQueue.waitIdle();
-    // vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-    // vkQueueWaitIdle(graphicsQueue);
 
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }

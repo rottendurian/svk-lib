@@ -208,6 +208,7 @@ public:
         graphics::IndexBufferInfo getIndexBufferInfo(VkIndexType indexType);
         graphics::IndexBufferInfo getIndexBufferInfo(VkIndexType indexType, VkDeviceSize offset);
     };
+
     svkbuffer createBuffer(VkBufferCreateInfo bufferCreateInfo,VmaAllocationCreateInfo allocCreateInfo, VkDeviceSize size);
     svkbuffer createStagingBuffer(VkDeviceSize size);
     //Transfer bit already selected
@@ -216,6 +217,7 @@ public:
     svkbuffer createBufferStaged(VkBufferUsageFlags bufferUsage, VkDeviceSize size,const void* data);
     svkbuffer createUniformBuffer(VkDeviceSize size);
     void copyBufferToBuffer(VkCommandPool commandPool,VkBuffer src, VkBuffer dst,VkDeviceSize size);
+
     struct svkimage {
         VmaAllocation alloc;
         VmaAllocationInfo allocInfo;
@@ -225,18 +227,20 @@ public:
         uint32_t mipLevels;
         VkDescriptorImageInfo getImageInfo();
     };
+
     svkimage createImage(VkImageCreateInfo imageInfo, VmaAllocationCreateInfo allocInfo);
     void transitionImageLayout(svkimage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,VkCommandPool commandPool);
     void transitionImageLayout(svkimage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+    
     void copyBufferToImage(svkbuffer& buffer, svkimage& image, VkExtent3D extent,VkCommandPool commandPool);
     void copyBufferToImage(svkbuffer& buffer, svkimage& image, VkExtent3D extent);
+
+    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent,VkCommandPool commandPool); //UNTESTED
+    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent); //UNTESTED
     
     svkimage createImageStaged(VkImageCreateInfo imageInfo, VmaAllocationCreateInfo allocInfo, VkCommandPool commandPool, const void* data);
     svkimage create2DImageFromFile(const char* file,uint32_t mipLevels,VkCommandPool commandPool);
     svkimage create2DImageFromFile(const char* file,uint32_t mipLevels);
-
-    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent,VkCommandPool commandPool); //UNTESTED
-    void copyImageToImage(svkimage& src, svkimage& dst, VkExtent3D extent); //UNTESTED
 
     void createImageView(svkimage& image, VkFormat format, VkImageViewType viewType,VkImageAspectFlags aspectFlags);
     void createSampler(svkimage& image, VkFilter mFilter,VkSamplerAddressMode samplerAddressMode);
@@ -249,13 +253,12 @@ public:
     void destroyImageView(VkImageView imageView);
     void destroySampler(VkSampler sampler);
     
-private:
     //Vulkan Memory Allocator end
-
-    //Descriptor Allocators
 public:
+    //Descriptor Allocators
     descriptor::allocator::pool getDescriptorPool();
     descriptor::builder createDescriptorBuilder(descriptor::allocator::pool* pool);
+
 private:
     descriptor::allocator* descriptorAllocator;
     descriptor::layout::cache descriptorLayoutCache;
