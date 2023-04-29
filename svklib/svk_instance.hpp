@@ -40,6 +40,9 @@ class instance {
 public:
     instance(window& win,uint32_t apiVersion);
     instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures);
+    instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures,std::vector<const char*> extensions);
+
+    void init();
     ~instance();
 
     inline void waitForDeviceIdle() { vkDeviceWaitIdle(device); }
@@ -97,10 +100,6 @@ private:
     
     VkDebugUtilsMessengerCreateInfoEXT populateDebugMessengerCreateInfo();
 
-    static constexpr int validationLayersSize = 1;
-    static inline const char* const validationLayers[] = {
-        "VK_LAYER_KHRONOS_validation"
-    };
     // static const char* validationLayers[] = {
     //     "VK_LAYER_KHRONOS_validation"
     // };
@@ -189,6 +188,8 @@ private:
     void destroyCommandPool(VkCommandPool commandPool);
 
     std::unique_ptr<VkPhysicalDeviceFeatures> requestedFeatures;
+    std::vector<const char*> requestedExtensions;
+
     int getSupportedFeatureScore(VkPhysicalDevice physicalDevice); 
     void createLogicalDevice();
     void destroyLogicalDevice();

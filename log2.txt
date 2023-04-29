@@ -1,0 +1,568 @@
+Launching Vulkan Application:
+- Layers overridden by "Validation" configuration.
+- Application: vulkan
+- Executable: /home/ryan/Documents/svk-lib/build/vulkan
+- Working Directory: /home/ryan/Documents/svk-lib
+- Log file: /home/ryan/Documents/svk-lib/log2.txt
+Thread count: 16
+INFO:             Vulkan Loader Version 1.3.243
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library ""
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library "libVkLayer_MESA_device_select.so"
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library "libVkLayer_khronos_validation.so"
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library ""
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library "libVkLayer_MESA_device_select.so"
+WARNING:          vkEnumerateInstanceLayerProperties: Unable to resolve symbol "" in implicit layer library "libVkLayer_khronos_validation.so"
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+DRIVER:           Searching for driver manifest files
+DRIVER:              In following locations:
+DRIVER:                 /home/ryan/.config/vulkan/icd.d
+DRIVER:                 /etc/xdg/xdg-ubuntu/vulkan/icd.d
+DRIVER:                 /etc/xdg/vulkan/icd.d
+DRIVER:                 /etc/vulkan/icd.d
+DRIVER:                 /home/ryan/.local/share/vulkan/icd.d
+DRIVER:                 /usr/share/ubuntu/vulkan/icd.d
+DRIVER:                 /usr/local/share/vulkan/icd.d
+DRIVER:                 /usr/share/vulkan/icd.d
+DRIVER:                 /var/lib/snapd/desktop/vulkan/icd.d
+DRIVER:              Found the following files:
+DRIVER:                 /usr/share/vulkan/icd.d/radeon_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/intel_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/radeon_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_radeon.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/intel_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_intel.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/lvp_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_lvp.so
+DRIVER:           Searching for driver manifest files
+DRIVER:              In following locations:
+DRIVER:                 /home/ryan/.config/vulkan/icd.d
+DRIVER:                 /etc/xdg/xdg-ubuntu/vulkan/icd.d
+DRIVER:                 /etc/xdg/vulkan/icd.d
+DRIVER:                 /etc/vulkan/icd.d
+DRIVER:                 /home/ryan/.local/share/vulkan/icd.d
+DRIVER:                 /usr/share/ubuntu/vulkan/icd.d
+DRIVER:                 /usr/local/share/vulkan/icd.d
+DRIVER:                 /usr/share/vulkan/icd.d
+DRIVER:                 /var/lib/snapd/desktop/vulkan/icd.d
+DRIVER:              Found the following files:
+DRIVER:                 /usr/share/vulkan/icd.d/radeon_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/intel_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/radeon_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_radeon.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/intel_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_intel.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/lvp_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_lvp.so
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+DRIVER:           Searching for driver manifest files
+DRIVER:              In following locations:
+DRIVER:                 /home/ryan/.config/vulkan/icd.d
+DRIVER:                 /etc/xdg/xdg-ubuntu/vulkan/icd.d
+DRIVER:                 /etc/xdg/vulkan/icd.d
+DRIVER:                 /etc/vulkan/icd.d
+DRIVER:                 /home/ryan/.local/share/vulkan/icd.d
+DRIVER:                 /usr/share/ubuntu/vulkan/icd.d
+DRIVER:                 /usr/local/share/vulkan/icd.d
+DRIVER:                 /usr/share/vulkan/icd.d
+DRIVER:                 /var/lib/snapd/desktop/vulkan/icd.d
+DRIVER:              Found the following files:
+DRIVER:                 /usr/share/vulkan/icd.d/radeon_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/intel_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/radeon_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_radeon.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/intel_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_intel.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/lvp_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_lvp.so
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_api_dump is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_profiles is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_screenshot is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_gfxreconstruct is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_KHRONOS_synchronization2 is not list inside of any.  So removing layer from current layer list.
+DEBUG:            loader_remove_layers_not_in_implicit_meta_layers : Implicit meta-layers are active, and layer VK_LAYER_LUNARG_monitor is not list inside of any.  So removing layer from current layer list.
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.config/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/xdg-ubuntu/vulkan/implicit_layer.d
+LAYER:                  /etc/xdg/vulkan/implicit_layer.d
+LAYER:                  /etc/vulkan/implicit_layer.d
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/ubuntu/vulkan/implicit_layer.d
+LAYER:                  /usr/local/share/vulkan/implicit_layer.d
+LAYER:                  /usr/share/vulkan/implicit_layer.d
+LAYER:                  /var/lib/snapd/desktop/vulkan/implicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json
+LAYER:                  /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan/implicit_layer.d/VkLayer_override.json (file version "1.1.2")
+INFO | LAYER:     Encountered meta-layer "VK_LAYER_LUNARG_override"
+INFO:             Found manifest file /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json (file version "1.0.0")
+INFO | LAYER:     Using the global override layer
+WARNING | LAYER:  Override layer has override paths set to /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:            Searching for layer manifest files
+LAYER:               In following locations:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d
+LAYER:               Found the following files:
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json
+LAYER:                  /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_api_dump.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_profiles.json (file version "1.2.1")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_screenshot.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_gfxreconstruct.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_synchronization2.json (file version "1.2.0")
+INFO:             Found manifest file /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_monitor.json (file version "1.0.0")
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_report
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_debug_utils
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding instance extension VK_EXT_validation_features
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_debug_marker
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_validation_cache
+DEBUG:            Meta-layer VK_LAYER_LUNARG_override component layer VK_LAYER_KHRONOS_validation adding device extension VK_EXT_tooling_info
+INFO | LAYER:     Meta-layer "VK_LAYER_LUNARG_override" all 1 component layers appear to be valid.
+LAYER:              [0] VK_LAYER_KHRONOS_validation
+DRIVER:           Searching for driver manifest files
+DRIVER:              In following locations:
+DRIVER:                 /home/ryan/.config/vulkan/icd.d
+DRIVER:                 /etc/xdg/xdg-ubuntu/vulkan/icd.d
+DRIVER:                 /etc/xdg/vulkan/icd.d
+DRIVER:                 /etc/vulkan/icd.d
+DRIVER:                 /home/ryan/.local/share/vulkan/icd.d
+DRIVER:                 /usr/share/ubuntu/vulkan/icd.d
+DRIVER:                 /usr/local/share/vulkan/icd.d
+DRIVER:                 /usr/share/vulkan/icd.d
+DRIVER:                 /var/lib/snapd/desktop/vulkan/icd.d
+DRIVER:              Found the following files:
+DRIVER:                 /usr/share/vulkan/icd.d/radeon_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/intel_icd.x86_64.json
+DRIVER:                 /usr/share/vulkan/icd.d/lvp_icd.x86_64.json
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/radeon_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_radeon.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/intel_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_intel.so
+DRIVER:           Found ICD manifest file /usr/share/vulkan/icd.d/lvp_icd.x86_64.json, version "1.0.0"
+DEBUG | DRIVER:   Searching for ICD drivers named /usr/lib/x86_64-linux-gnu/libvulkan_lvp.so
+DEBUG | LAYER:    Loading layer library libVkLayer_MESA_device_select.so
+INFO | LAYER:     Insert instance layer "VK_LAYER_MESA_device_select" (libVkLayer_MESA_device_select.so)
+DEBUG | LAYER:    Loading layer library libVkLayer_khronos_validation.so
+INFO | LAYER:     Insert instance layer "VK_LAYER_KHRONOS_validation" (libVkLayer_khronos_validation.so)
+LAYER:            vkCreateInstance layer callstack setup to:
+LAYER:               <Application>
+LAYER:                 ||
+LAYER:               <Loader>
+LAYER:                 ||
+LAYER:               VK_LAYER_KHRONOS_validation
+LAYER:                       Type: Explicit
+LAYER:                       Manifest: /home/ryan/.local/share/vulkan-sdk/1.3.243.0/x86_64/etc/vulkan/explicit_layer.d/VkLayer_khronos_validation.json
+LAYER:                       Library:  libVkLayer_khronos_validation.so
+LAYER:                 ||
+LAYER:               VK_LAYER_MESA_device_select
+LAYER:                       Type: Implicit
+LAYER:                           Disable Env Var:  NODEVICE_SELECT
+LAYER:                       Manifest: /usr/share/vulkan/implicit_layer.d/VkLayer_MESA_device_select.json
+LAYER:                       Library:  libVkLayer_MESA_device_select.so
+LAYER:                 ||
+LAYER:               <Drivers>
+UNASSIGNED-khronos-validation-createinstance-status-message(INFO / SPEC): msgNum: -671457468 - Validation Information: [ UNASSIGNED-khronos-validation-createinstance-status-message ] Object 0: handle = 0x561022608700, type = VK_OBJECT_TYPE_INSTANCE; | MessageID = 0xd7fa5f44 | Khronos Validation Layer Active:
+    Settings File: Found at /home/ryan/.local/share/vulkan/settings.d/vk_layer_settings.txt specified by VkConfig application override.
+    Current Enables: None.
+    Current Disables: None.
+
+    Objects: 1
+        [0] 0x561022608700, type: 1, name: NULL
+Process terminated

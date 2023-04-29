@@ -125,7 +125,8 @@ int main() {
         glfwSetInputMode(win.win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         svklib::instance inst(win,VK_API_VERSION_1_3,
-                {.tessellationShader = VK_TRUE}
+                {.tessellationShader = VK_TRUE},
+                {VK_KHR_SWAPCHAIN_EXTENSION_NAME}
             );
         svklib::swapchain swap(inst,3,VK_SAMPLE_COUNT_8_BIT,VK_PRESENT_MODE_MAILBOX_KHR);
 

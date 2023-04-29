@@ -215,7 +215,7 @@ void renderer::drawFrame() {
 
     sync.submitFrame(currentFrame,1,&swap.commandBuffers[currentFrame],inst.graphicsQueue);
 
-    result = sync.presentFrame(currentFrame,imageIndex,swap.swapChain,inst.graphicsQueue); //since my graphics queue is the same as the present queue(sync)
+    result = sync.presentFrame(currentFrame,imageIndex,swap.swapChain,inst.presentQueue); //since my graphics queue is the same as the present queue(sync)
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || inst.win.frameBufferResized() ) {
         pipe.reCreateSwapChain();

@@ -14,28 +14,34 @@
 
 namespace svklib {
 
-static constexpr int deviceExtensionsCount = 1;
+static constexpr int deviceExtensionsCount = 0;
 static constexpr const char* deviceExtensions[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+static constexpr int validationLayersSize = 1;
+static inline const char* const validationLayers[] = {
+    "VK_LAYER_KHRONOS_validation"
+};
 
 instance::instance(window &win,uint32_t apiVersion)
     : win(win),apiVersion(apiVersion),requestedFeatures(nullptr)
 {
-    createInstance("svklib","svklib",1,1,apiVersion);
-    createDebugMessenger();
-    createSurface();
-    pickPhysicalDevice();
-    createLogicalDevice();
-    createAllocator();
-    createCommandPools(std::thread::hardware_concurrency());
-    descriptorAllocator = descriptor::allocator::init(device);
-    descriptorLayoutCache.init(device);
-    glslang::InitializeProcess();
+    init();
 }
 
 instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures)
     :win(win),apiVersion(apiVersion),requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures))
 {
-    createInstance("svklib","svklib",1,1,apiVersion);
+    init();
+}
+
+instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures,std::vector<const char*> extensions)
+    :win(win),apiVersion(apiVersion),requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures)),requestedExtensions(extensions)
+{
+    init();
+}
+
+void instance::init() {
+    createInstance("svklib","svklib",0,1,apiVersion);
     createDebugMessenger();
     createSurface();
     pickPhysicalDevice();
@@ -49,8 +55,8 @@ instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enab
 
 instance::~instance() {
     glslang::FinalizeProcess();
-    delete descriptorAllocator;
     descriptorLayoutCache.cleanup();
+    delete descriptorAllocator;
     cleanupDeletionQueue();
     destroyCommandPools();
     destroyAllocator();
@@ -354,6 +360,9 @@ bool instance::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice) {
     for (int i = 0; i < deviceExtensionsCount; i++) {
         requiredExtensions.insert(deviceExtensions[i]);
     }
+    for (auto& ext : requestedExtensions) {
+        requiredExtensions.insert(ext);
+    }
 
     for (const auto& extension : availableExtensions) {
         requiredExtensions.erase(extension.extensionName);
@@ -653,8 +662,14 @@ void instance::createLogicalDevice() {
     createInfo.pEnabledFeatures = requestedFeatures.get();
 
     // createInfo.enabledExtensionCount = 0;
-    createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensionsCount);
-    createInfo.ppEnabledExtensionNames = deviceExtensions;
+    
+    //createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensionsCount);
+    //createInfo.ppEnabledExtensionNames = deviceExtensions;
+
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(requestedExtensions.size());
+    createInfo.ppEnabledExtensionNames = requestedExtensions.data();
+
+    
 
     if (enableValidationLayers) {
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayersSize);
