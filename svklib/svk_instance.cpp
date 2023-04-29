@@ -5,6 +5,7 @@
 
 #include "svk_shader.hpp"
 #include "vulkan/vulkan_core.h"
+#include <cstring>
 #include <memory>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -14,8 +15,7 @@
 
 namespace svklib {
 
-static constexpr int deviceExtensionsCount = 0;
-static constexpr const char* deviceExtensions[] = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+static const char* swapchainExtension = VK_KHR_SWAPCHAIN_EXTENSION_NAME;
 
 static constexpr int validationLayersSize = 1;
 static inline const char* const validationLayers[] = {
@@ -40,7 +40,20 @@ instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enab
     init();
 }
 
+static bool contains_string(const std::vector<const char*>& strings, const char* target)
+{
+    if (strings.empty())
+        return false;
+
+    auto it = std::find_if(strings.begin(), strings.end(),
+                           [target](const char* str) { return std::strcmp(str, target) == 0; });
+    return it != strings.end();
+}
+
 void instance::init() {
+    if (!contains_string(requestedExtensions, VK_KHR_SWAPCHAIN_EXTENSION_NAME))
+        requestedExtensions.push_back(swapchainExtension);
+
     createInstance("svklib","svklib",0,1,apiVersion);
     createDebugMessenger();
     createSurface();
@@ -51,13 +64,13 @@ void instance::init() {
     descriptorAllocator = descriptor::allocator::init(device);
     descriptorLayoutCache.init(device);
     glslang::InitializeProcess();
+
 }
 
 instance::~instance() {
     glslang::FinalizeProcess();
     descriptorLayoutCache.cleanup();
     delete descriptorAllocator;
-    cleanupDeletionQueue();
     destroyCommandPools();
     destroyAllocator();
     destroyLogicalDevice();
@@ -261,7 +274,22 @@ void instance::pickPhysicalDevice() {
 int instance::ratePhysicalDevice(VkPhysicalDevice physicalDevice) {
     int score = getSupportedFeatureScore(physicalDevice);
     if (score == 0) return 0;
-    
+   
+    VkPhysicalDeviceMemoryProperties memProps;
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProps);
+
+    VkDeviceSize deviceMemory = 0;
+    for (uint32_t i = 0; i < memProps.memoryHeapCount; ++i) {
+        const auto& heap = memProps.memoryHeaps[i];
+        if (heap.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) {
+            deviceMemory += heap.size;
+        }
+    }
+
+    static constexpr double memoryScoreMultiplier = 20.0;
+
+    score += static_cast<int>((static_cast<double>(deviceMemory) / 1000000000.0 * memoryScoreMultiplier) + 0.5);
+
     VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 
@@ -288,6 +316,7 @@ int instance::ratePhysicalDevice(VkPhysicalDevice physicalDevice) {
     }
 #ifdef _DEBUG 
     std::cout << "Device: " + std::string(properties.deviceName) + " score: " + std::to_string(score) << std::endl;
+    std::cout << "Device memory score " << (static_cast<double>(deviceMemory) / 1000000000.0 * memoryScoreMultiplier) << std::endl;
 #endif
     return score;
 }
@@ -357,9 +386,7 @@ bool instance::checkDeviceExtensionSupport(VkPhysicalDevice physicalDevice) {
     vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
 
     std::set<std::string> requiredExtensions{};
-    for (int i = 0; i < deviceExtensionsCount; i++) {
-        requiredExtensions.insert(deviceExtensions[i]);
-    }
+
     for (auto& ext : requestedExtensions) {
         requiredExtensions.insert(ext);
     }
@@ -668,7 +695,6 @@ void instance::createLogicalDevice() {
 
     createInfo.enabledExtensionCount = static_cast<uint32_t>(requestedExtensions.size());
     createInfo.ppEnabledExtensionNames = requestedExtensions.data();
-
     
 
     if (enableValidationLayers) {
@@ -1186,14 +1212,6 @@ void instance::destroyImageView(VkImageView imageView)
 void instance::destroySampler(VkSampler sampler)
 {
     vkDestroySampler(device, sampler, NULL);
-}
-
-void instance::cleanupDeletionQueue() {
-    while (!delQueue.empty()) {
-        auto func = delQueue.front();
-        func();
-        delQueue.pop_front();
-    }
 }
 
 // Vulkan Memory Allocator end

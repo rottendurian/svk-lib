@@ -99,10 +99,6 @@ private:
         void* pUserData);
     
     VkDebugUtilsMessengerCreateInfoEXT populateDebugMessengerCreateInfo();
-
-    // static const char* validationLayers[] = {
-    //     "VK_LAYER_KHRONOS_validation"
-    // };
     //DEBUGGER END
 
     //VKPHYSICALDEVICE
@@ -119,8 +115,8 @@ private:
 
     //for depth buffer
     VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates,VkImageTiling tiling, VkFormatFeatureFlags features);
-    VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
+    VkFormat findDepthFormat();
     
     VkSampleCountFlagBits maxMsaa = VK_SAMPLE_COUNT_1_BIT;
     VkSampleCountFlagBits getMaxUsableSampleCount();
@@ -251,10 +247,7 @@ public:
     void destroyImageView(VkImageView imageView);
     void destroySampler(VkSampler sampler);
     
-    std::deque<std::function<void()>> delQueue;
 private:
-    void cleanupDeletionQueue();
-
     //Vulkan Memory Allocator end
 
     //Descriptor Allocators
