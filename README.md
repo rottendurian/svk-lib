@@ -6,6 +6,6 @@ This project also relies on the VulkanSDK which should locatable by FindVulkan i
 
 Example of setting up the cmake file:
 
-cmake -B build_debug -S . -DCMAKE_BUILD_TYPE=Debug
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug
 
-cmake --build build_debug --parallel 16
+cmake --build build --parallel 16
