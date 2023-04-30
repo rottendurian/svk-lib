@@ -6,9 +6,11 @@
 #define STP_POOL_IMPLEMENTATION
 #include "stp.hpp"
 
+#include "atom/atom.hpp"
+
 namespace svklib {
 
-static stp::pool m_pool;
+static atom::pool m_pool;
 static std::mutex m_mutex;
 
 threadpool::threadpool() {} 

@@ -52,5 +52,10 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC dep/stb
     PUBLIC dep/vma/include
     PUBLIC dep
+    PUBLIC dep/atom
 )
+
+add_subdirectory(dep/atom)
+target_link_libraries(${PROJECT_NAME} PUBLIC atom)
+
 
