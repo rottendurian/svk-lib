@@ -3,9 +3,6 @@
 
 #include "svk_threadpool.hpp"
 
-#define STP_POOL_IMPLEMENTATION
-#include "stp.hpp"
-
 #include "atom/atom.hpp"
 
 namespace svklib {

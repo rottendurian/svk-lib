@@ -6,24 +6,27 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 cmake_minimum_required(VERSION 3.22.0)
 
-project(vulkan)
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  add_compile_definitions(_DEBUG)
+    add_compile_definitions(_DEBUG)
 endif()
 
+if(SVKLIB_BUILD_EXAMPLE STREQUAL "ON")
+    project(vulkan)
 
-add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/camera.cpp)
+    add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/example/main.cpp ${CMAKE_CURRENT_SOURCE_DIR}/example/camera.cpp)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+    target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
-add_subdirectory(svklib)
+    add_subdirectory(svklib)
 
-target_link_libraries(${PROJECT_NAME} svklib)
+    target_link_libraries(${PROJECT_NAME} svklib)
 
-target_include_directories(${PROJECT_NAME} 
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/svklib
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
+    target_include_directories(${PROJECT_NAME} 
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/svklib
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/dep/glm
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+else()
+    add_subdirectory(svklib)
+endif()
 
