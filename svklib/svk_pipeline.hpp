@@ -17,6 +17,8 @@ namespace graphics {
     private:
         friend class svklib::renderer;
         friend class svklib::graphics::pipeline::builder;
+        friend class std::unique_ptr<pipeline>;
+        friend class std::shared_ptr<pipeline>;
         
         struct BuildInfo {
             std::vector<VkDynamicState> dynamicStates{};
