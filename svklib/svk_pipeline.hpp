@@ -4,9 +4,6 @@
 #include "svk_swapchain.hpp"
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"
-#include <memory>
-#include <vulkan/vulkan_core.h>
-#include <vulkan/vulkan_structs.hpp>
 
 namespace svklib {
 
@@ -17,8 +14,6 @@ namespace graphics {
     private:
         friend class svklib::renderer;
         friend class svklib::graphics::pipeline::builder;
-        friend class std::unique_ptr<pipeline>;
-        friend class std::shared_ptr<pipeline>;
         
         struct BuildInfo {
             std::vector<VkDynamicState> dynamicStates{};
@@ -58,6 +53,8 @@ namespace graphics {
                  VkPipelineLayout pipelineLayout, VkRenderPass renderPass, VkPipeline graphicsPipeline);
 
     public:
+        //for forward declarations
+        pipeline(instance& inst, swapchain& swapchain);
         ~pipeline();
 
 
@@ -116,10 +113,14 @@ namespace graphics {
 
                 builder& buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size);
                 builder& addDescriptorSetLayout(VkDescriptorSetLayout layout);
-                
-                svklib::graphics::pipeline buildPipeline(VkPipeline oldPipeline);
+               
+                void buildPipeline(VkPipeline oldPipeline, pipeline* pipeline);
+                pipeline buildPipeline(VkPipeline oldPipeline);
 
             private:
+                void buildPipelineImpl(VkPipeline oldPipeline);
+
+
                 builder(instance& inst, swapchain& swapChain);
                 //~builder();
                

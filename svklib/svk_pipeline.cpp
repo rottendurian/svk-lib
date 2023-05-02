@@ -3,8 +3,7 @@
 
 #include "svk_pipeline.hpp"
 #include "svk_descriptor.hpp"
-#include <stdexcept>
-#include <vulkan/vulkan_core.h>
+#include <memory>
 
 namespace svklib {
 
@@ -302,7 +301,7 @@ pipeline::builder& pipeline::builder::addDescriptorSetLayout(VkDescriptorSetLayo
     return *this;
 }
 
-pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
+void pipeline::builder::buildPipelineImpl(VkPipeline oldPipeline) {
     //check that the tasks are completed
     while (pipelineBuildQueue.size() != 0) {
         while (pipelineBuildQueue.front().load() != true) {
@@ -346,7 +345,20 @@ pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
     for (auto& shader : info->shaderStages) {
         vkDestroyShaderModule(inst.device, shader.module, nullptr);
     }
-    
+}
+
+void pipeline::builder::buildPipeline(VkPipeline oldPipeline, pipeline* pipeline) {
+    buildPipelineImpl(oldPipeline);
+
+    pipeline->builderInfo = std::unique_ptr<BuildInfo>(info);
+    pipeline->pipelineLayout = pipelineLayout;
+    pipeline->renderPass = renderPass;
+    pipeline->graphicsPipeline = graphicsPipeline;
+}
+
+pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
+    buildPipelineImpl(oldPipeline);
+
     return pipeline(inst,swapChain,info,pipelineLayout,renderPass,graphicsPipeline);
 }
 
