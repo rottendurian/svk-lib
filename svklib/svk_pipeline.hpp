@@ -153,8 +153,9 @@ namespace graphics {
 namespace compute {
 
     class pipeline {
-        private:
+        public:
             class builder;
+        private:
             friend class builder;
             friend class renderer;
             struct BuildInfo {
@@ -179,6 +180,7 @@ namespace compute {
         private:
             instance& inst;
             
+        public:
             class builder {
             public:
                 ~builder()=default;
