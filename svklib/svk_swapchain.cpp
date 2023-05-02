@@ -7,14 +7,11 @@
 
 namespace svklib {
 
-swapchain::swapchain(instance& inst,int framesInFlight,VkSampleCountFlagBits samples) 
-    : inst(inst),samples(samples),framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
-      preferredPresentMode(VK_PRESENT_MODE_MAILBOX_KHR) 
+swapchain::swapchain(instance& inst, int framesInFlight, VkImageUsageFlagBits imageFlags, VkPresentModeKHR presentMode) 
+    :inst(inst),samples(VK_SAMPLE_COUNT_1_BIT),framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
+    preferredPresentMode(VK_PRESENT_MODE_MAILBOX_KHR)
 {
-    if (samples > inst.maxMsaa) {
-        throw std::runtime_error("swapchain samples cannot be higher than physical device capabilities");
-    }
-    createVKSwapChain();
+    createVKSwapChain(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | imageFlags);
     createImageViews();
     allocateCommandBuffers();
 }
@@ -23,7 +20,10 @@ swapchain::swapchain(instance& inst,int framesInFlight,VkSampleCountFlagBits sam
     : inst(inst),framesInFlight(framesInFlight),samples(samples),commandPool(inst.getCommandPool()),
       preferredPresentMode(presentMode)
 {
-    createVKSwapChain();
+    if (samples > inst.maxMsaa)
+        throw std::runtime_error("swapchain samples cannot be higher than physical device capabilities");
+
+    createVKSwapChain(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
     createImageViews();
     allocateCommandBuffers();
 }
@@ -35,7 +35,7 @@ swapchain::~swapchain() {
 }
 
 // swapchain
-void swapchain::createVKSwapChain() {
+void swapchain::createVKSwapChain(VkImageUsageFlags usageFlags) {
     instance::SwapChainSupportDetails swapChainSupport = inst.querySwapChainSupport(inst.physicalDevice);
 
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -192,7 +192,6 @@ void swapchain::destroyImageViews() {
 }
 
 // swapchain views end
-
 
 } // namespace svklib
 

@@ -14,8 +14,8 @@ class swapchain {
 friend class graphics::pipeline;
 friend class renderer;
 public:
-    swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples);
-    swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples, VkPresentModeKHR preferredPresentMode);
+    swapchain(instance& inst, int framesInFlight, VkImageUsageFlagBits imageFlags,VkPresentModeKHR presentMode=VK_PRESENT_MODE_MAILBOX_KHR);
+    swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples=VK_SAMPLE_COUNT_2_BIT, VkPresentModeKHR preferredPresentMode=VK_PRESENT_MODE_MAILBOX_KHR);
     ~swapchain();
     
 private:
@@ -39,7 +39,7 @@ private:
     void allocateCommandBuffers();
     void freeCommandBuffers();
 
-    void createVKSwapChain();
+    void createVKSwapChain(VkImageUsageFlags usageFlags);
     // void reCreateSwapChain(VkRenderPass renderPass);
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);

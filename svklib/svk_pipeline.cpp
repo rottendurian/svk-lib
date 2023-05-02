@@ -518,7 +518,7 @@ void pipeline::reCreateSwapChain() {
     swapChain.destroyImageViews();
     vkDestroySwapchainKHR(inst.device, swapChain.swapChain, nullptr);
 
-    swapChain.createVKSwapChain();
+    swapChain.createVKSwapChain(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
     swapChain.createImageViews();
     createDepthResources();
     createColorResources();
