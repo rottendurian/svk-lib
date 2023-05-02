@@ -4,6 +4,7 @@
 #include "svk_swapchain.hpp"
 #include "svk_shader.hpp"
 #include "svk_threadpool.hpp"
+#include <vulkan/vulkan_core.h>
 
 namespace svklib {
 
@@ -161,8 +162,11 @@ namespace compute {
                 std::vector<VkDescriptorSetLayout> descriptorSetLayouts{};
                 VkComputePipelineCreateInfo pipelineInfo{};
             };
+
             pipeline(instance& inst, BuildInfo* buildInfo, VkPipelineLayout pipelineLayout, VkPipeline pipeline);
         public:
+            //for forward declarations
+            pipeline(instance& inst);
             ~pipeline();
 
             std::unique_ptr<BuildInfo> builderInfo{};
@@ -183,9 +187,12 @@ namespace compute {
                 builder& buildShader(const char* path, VkShaderStageFlagBits stage);
                 builder& addDescriptorSetLayout(VkDescriptorSetLayout layout);
                 builder& buildPipelineLayout();
+                void buildPipeline(VkPipeline oldPipeline, svklib::compute::pipeline* pipeline);
                 svklib::compute::pipeline buildPipeline(VkPipeline oldPipeline);
                 
             private:
+                void buildPipelineImpl(VkPipeline oldPipeline);
+
                 builder(instance& inst);
                 instance& inst;
 

@@ -3,6 +3,7 @@
 
 #include "svk_pipeline.hpp"
 #include "svk_descriptor.hpp"
+#include "vulkan/vulkan_core.h"
 #include <memory>
 
 namespace svklib {
@@ -623,6 +624,11 @@ pipeline::pipeline(instance& inst,BuildInfo* buildInfo,VkPipelineLayout pipeline
 {
 }
 
+pipeline::pipeline(instance& inst) 
+    :inst(inst)
+{
+}
+
 pipeline::~pipeline() {
     vkDestroyPipelineLayout(inst.device, pipelineLayout, nullptr);
     vkDestroyPipeline(inst.device, computePipeline, nullptr);
@@ -705,7 +711,7 @@ pipeline::builder& pipeline::builder::buildPipelineLayout() {
     return *this;
 }
 
-pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
+void pipeline::builder::buildPipelineImpl(VkPipeline oldPipeline) {
     while (pipelineBuildQueue.size() != 0) {
         while (pipelineBuildQueue.front().load() != true) {
             std::this_thread::yield();
@@ -723,11 +729,19 @@ pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
     if (vkCreateComputePipelines(inst.device, VK_NULL_HANDLE, 1, &info->pipelineInfo, nullptr, &computePipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create compute pipeline!");
     }
-
-    return pipeline(inst,info,pipelineLayout,computePipeline);
 }
 
+void pipeline::builder::buildPipeline(VkPipeline oldPipeline, svklib::compute::pipeline* pipeline) {
+    buildPipelineImpl(oldPipeline);
+    pipeline->builderInfo = std::unique_ptr<BuildInfo>(info);
+    pipeline->pipelineLayout = pipelineLayout;
+    pipeline->computePipeline = computePipeline;
+}
 
+pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
+    buildPipelineImpl(oldPipeline);
+    return pipeline(inst,info,pipelineLayout,computePipeline);
+}
 
 } // namespace compute
 
