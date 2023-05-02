@@ -33,18 +33,21 @@ public:
     std::vector<VkImage> swapChainImages{};
     VkFormat swapChainImageFormat{};
     VkExtent2D swapChainExtent{};
+    void recreateSwapChain();
 private:
     VkPresentModeKHR preferredPresentMode;
+    VkImageUsageFlags imageFlags;
     instance::CommandPool commandPool;
     void allocateCommandBuffers();
     void freeCommandBuffers();
 
-    void createVKSwapChain(VkImageUsageFlags usageFlags);
+    void createVKSwapChain();
     // void reCreateSwapChain(VkRenderPass renderPass);
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+    void destroySwapChain();
     //swapchain end
 
     //swapchain views
@@ -55,7 +58,6 @@ private:
 
     //swapchain views end
 
-    void destroySwapChain();
 
 
 };

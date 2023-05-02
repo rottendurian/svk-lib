@@ -9,21 +9,21 @@ namespace svklib {
 
 swapchain::swapchain(instance& inst, int framesInFlight, VkImageUsageFlagBits imageFlags, VkPresentModeKHR presentMode) 
     :inst(inst),samples(VK_SAMPLE_COUNT_1_BIT),framesInFlight(framesInFlight),commandPool(inst.getCommandPool()),
-    preferredPresentMode(VK_PRESENT_MODE_MAILBOX_KHR)
+    preferredPresentMode(VK_PRESENT_MODE_MAILBOX_KHR), imageFlags(imageFlags | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
 {
-    createVKSwapChain(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | imageFlags);
+    createVKSwapChain();
     createImageViews();
     allocateCommandBuffers();
 }
 
 swapchain::swapchain(instance& inst,int framesInFlight,VkSampleCountFlagBits samples,VkPresentModeKHR presentMode) 
     : inst(inst),framesInFlight(framesInFlight),samples(samples),commandPool(inst.getCommandPool()),
-      preferredPresentMode(presentMode)
+      preferredPresentMode(presentMode),imageFlags(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
 {
     if (samples > inst.maxMsaa)
         throw std::runtime_error("swapchain samples cannot be higher than physical device capabilities");
 
-    createVKSwapChain(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
+    createVKSwapChain();
     createImageViews();
     allocateCommandBuffers();
 }
@@ -34,8 +34,14 @@ swapchain::~swapchain() {
     destroySwapChain();
 }
 
+void swapchain::recreateSwapChain() {
+    destroySwapChain();
+    createVKSwapChain();
+    createImageViews();
+}
+
 // swapchain
-void swapchain::createVKSwapChain(VkImageUsageFlags usageFlags) {
+void swapchain::createVKSwapChain() {
     instance::SwapChainSupportDetails swapChainSupport = inst.querySwapChainSupport(inst.physicalDevice);
 
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -56,7 +62,7 @@ void swapchain::createVKSwapChain(VkImageUsageFlags usageFlags) {
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
     createInfo.imageExtent = extent;
     createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    createInfo.imageUsage = this->imageFlags;
 
     instance::QueueFamilyIndices indices = inst.findQueueFamilies(inst.physicalDevice);
     uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
