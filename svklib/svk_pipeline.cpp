@@ -19,6 +19,12 @@ pipeline::pipeline(instance& inst,swapchain& swapChain, BuildInfo* builderInfo,
     createFramebuffers();
 }
 
+pipeline::pipeline(instance& inst, swapchain& swapChain)
+    : inst(inst),swapChain(swapChain)
+{
+
+}
+
 pipeline::~pipeline() {
     
     destroyFramebuffers();
@@ -354,6 +360,9 @@ void pipeline::builder::buildPipeline(VkPipeline oldPipeline, pipeline* pipeline
     pipeline->pipelineLayout = pipelineLayout;
     pipeline->renderPass = renderPass;
     pipeline->graphicsPipeline = graphicsPipeline;
+    pipeline->createDepthResources();
+    pipeline->createColorResources();
+    pipeline->createFramebuffers();
 }
 
 pipeline pipeline::builder::buildPipeline(VkPipeline oldPipeline) {
