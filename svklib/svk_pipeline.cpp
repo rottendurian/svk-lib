@@ -694,12 +694,26 @@ pipeline::builder& pipeline::builder::addDescriptorSetLayout(VkDescriptorSetLayo
     return *this;
 }
 
+pipeline::builder& pipeline::builder::buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size) {
+    info->pushConstantRange = {
+        .stageFlags = stageFlags,
+        .offset = offset,
+        .size = size,
+    };
+
+    return *this;
+}
+
 pipeline::builder& pipeline::builder::buildPipelineLayout() {
     addToBuildQueue([this](){
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = info->descriptorSetLayouts.size();
         pipelineLayoutInfo.pSetLayouts = info->descriptorSetLayouts.data();
+        if (info->pushConstantRange.size != 0) {
+            pipelineLayoutInfo.pPushConstantRanges = &info->pushConstantRange;
+            pipelineLayoutInfo.pushConstantRangeCount = 1;
+        }
 
         if (vkCreatePipelineLayout(inst.device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create compute pipeline layout!");
@@ -727,6 +741,9 @@ void pipeline::builder::buildPipelineImpl(VkPipeline oldPipeline) {
     if (vkCreateComputePipelines(inst.device, VK_NULL_HANDLE, 1, &info->pipelineInfo, nullptr, &computePipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create compute pipeline!");
     }
+
+    vkDestroyShaderModule(inst.device, info->shaderStage.module, nullptr);
+
 }
 
 void pipeline::builder::buildPipeline(VkPipeline oldPipeline, svklib::compute::pipeline* pipeline) {

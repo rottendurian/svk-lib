@@ -161,6 +161,7 @@ namespace compute {
             struct BuildInfo {
                 VkPipelineShaderStageCreateInfo shaderStage{};
                 std::vector<VkDescriptorSetLayout> descriptorSetLayouts{};
+                VkPushConstantRange pushConstantRange{};
                 VkComputePipelineCreateInfo pipelineInfo{};
             };
 
@@ -188,6 +189,7 @@ namespace compute {
                 static builder begin(instance& inst);
                 builder& buildShader(const char* path, VkShaderStageFlagBits stage);
                 builder& addDescriptorSetLayout(VkDescriptorSetLayout layout);
+                builder& buildPushConstant(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size);
                 builder& buildPipelineLayout();
                 void buildPipeline(VkPipeline oldPipeline, svklib::compute::pipeline* pipeline);
                 svklib::compute::pipeline buildPipeline(VkPipeline oldPipeline);
