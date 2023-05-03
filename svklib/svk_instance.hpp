@@ -114,7 +114,7 @@ private:
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice physicalDevice);
 
     //for depth buffer
-    VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates,VkImageTiling tiling, VkFormatFeatureFlags features);
+    VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates,VkImageTiling tiling, VkFormatFeatureFlags features, VkImageUsageFlags usage);
     bool hasStencilComponent(VkFormat format);
     VkFormat findDepthFormat();
     

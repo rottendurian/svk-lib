@@ -51,8 +51,9 @@ private:
     //swapchain end
 
     //swapchain views
+public:
     std::vector<VkImageView> swapChainImageViews{};
-
+private:
     void createImageViews();
     void destroyImageViews();
 
