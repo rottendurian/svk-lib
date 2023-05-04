@@ -123,12 +123,20 @@ VkSurfaceFormatKHR swapchain::chooseSwapSurfaceFormat(const std::vector<VkSurfac
     for (const auto& availableFormat : availableFormats) {
         VkFormatProperties properties;
         vkGetPhysicalDeviceFormatProperties(inst.physicalDevice, availableFormat.format, &properties);
-        if ((properties.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) == VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) {
+        if ((imageFlags & VK_IMAGE_USAGE_STORAGE_BIT) == VK_IMAGE_USAGE_STORAGE_BIT) { 
+            if ((properties.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) == VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) {
+                return availableFormat;
+            }
+        } else {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return availableFormat;
             }
         }
     }
+
+#ifdef _DEBUG
+    std::cout << "Could not find a matching swapchain surface format, defaulting to first format" << std::endl;
+#endif
 
     return availableFormats[0];
 }
