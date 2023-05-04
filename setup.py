@@ -10,10 +10,10 @@ def setup():
                 "vcpkg"]
 
     if platform.system() == "Windows":
-        clone = ["cmd.exe", "/c"] + git_link
+        clone = git_link
         script = ["cmd.exe", "/c", "vcpkg\\bootstrap-vcpkg.bat"]
     else:
-        clone = ["bash"] + git_link
+        clone = git_link
         script = ["bash", "vcpkg/bootstrap-vcpkg.sh"]
 
     if os.path.isdir("vcpkg") is not True:
