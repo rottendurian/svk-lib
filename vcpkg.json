@@ -1,6 +1,0 @@
-{
-    "dependencies": [
-        "glslang",
-        "glfw3"
-    ]
-}
