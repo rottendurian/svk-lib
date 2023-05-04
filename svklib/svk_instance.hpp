@@ -210,6 +210,7 @@ public:
     };
 
     svkbuffer createBuffer(VkBufferCreateInfo bufferCreateInfo,VmaAllocationCreateInfo allocCreateInfo, VkDeviceSize size);
+    svkbuffer createComputeBuffer(VkDeviceSize size);
     svkbuffer createStagingBuffer(VkDeviceSize size);
     //Transfer bit already selected
     svkbuffer createBufferStaged(VkBufferUsageFlags bufferUsage, VkDeviceSize size,const void* data,VkCommandPool commandPool);
@@ -229,6 +230,7 @@ public:
     };
 
     svkimage createImage(VkImageCreateInfo imageInfo, VmaAllocationCreateInfo allocInfo);
+    svkimage createComputeImage(VkImageType imageType, VkExtent3D size);
     void transitionImageLayout(svkimage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,VkCommandPool commandPool);
     void transitionImageLayout(svkimage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
     

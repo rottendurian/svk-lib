@@ -6,6 +6,8 @@ build_release/*
 build_debug/*
 .config/*
 .cache/*
+vcpkg/*
+
 *.bat
 *.exe
 *.log

@@ -749,6 +749,19 @@ instance::svkbuffer instance::createBuffer(VkBufferCreateInfo bufferCreateInfo,V
     return buffer;
 }
 
+instance::svkbuffer instance::createComputeBuffer(VkDeviceSize size) {
+    VkBufferCreateInfo bufferCreateInfo{};
+    bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferCreateInfo.size = size;
+    bufferCreateInfo.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+    bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    
+    VmaAllocationCreateInfo allocCreateInfo{};
+    allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+
+    return createBuffer(bufferCreateInfo, allocCreateInfo, size);
+}
+
 instance::svkbuffer instance::createStagingBuffer(VkDeviceSize size) {
     VkBufferCreateInfo stageBufferInfo{};
     stageBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -823,6 +836,27 @@ instance::svkimage instance::createImage(VkImageCreateInfo imageInfo, VmaAllocat
     image.mipLevels = imageInfo.mipLevels;
 
     return std::move(image);
+}
+
+instance::svkimage instance::createComputeImage(VkImageType imageType, VkExtent3D size) {
+    VkImageCreateInfo imageInfo{};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.imageType = imageType;
+    imageInfo.extent = size;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageInfo.usage = VK_IMAGE_USAGE_STORAGE_BIT;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    VmaAllocationCreateInfo allocInfo{};
+    allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+    allocInfo.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+    return createImage(imageInfo, allocInfo);
 }
 
 void instance::transitionImageLayout(instance::svkimage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VkCommandPool commandPool)

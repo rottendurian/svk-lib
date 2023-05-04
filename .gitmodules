@@ -1,9 +1,6 @@
 [submodule "svklib/dep/stb"]
 	path = svklib/dep/stb
 	url = https://github.com/nothings/stb
-[submodule "vcpkg"]
-	path = vcpkg
-	url = https://github.com/microsoft/vcpkg.git
 [submodule "svklib/dep/vma"]
 	path = svklib/dep/vma
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
