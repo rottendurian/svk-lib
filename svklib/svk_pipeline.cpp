@@ -428,7 +428,7 @@ void pipeline::builder::buildRenderPass() {
 // pipeline
 
 
-void pipeline::builder::createRenderPass() { //todo abstractions
+void pipeline::builder::createRenderPass() { //TODO abstractions
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChain.swapChainImageFormat;
     colorAttachment.samples = swapChain.samples;
