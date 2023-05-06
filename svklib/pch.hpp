@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include <memory>
 
 #include <deque>
 #include <functional>

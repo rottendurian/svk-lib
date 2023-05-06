@@ -3,7 +3,6 @@
 
 // #include "pch.hpp"
 #include "svk_instance.hpp"
-#include "vulkan/vulkan_core.h"
 
 #include <cstdint>
 #include <algorithm> 

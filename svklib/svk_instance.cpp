@@ -4,7 +4,7 @@
 #include "svk_instance.hpp"
 
 #include "svk_shader.hpp"
-#include "vulkan/vulkan_core.h"
+
 #include <cstring>
 #include <memory>
 

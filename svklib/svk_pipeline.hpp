@@ -157,7 +157,7 @@ namespace compute {
             class builder;
         private:
             friend class builder;
-            friend class renderer;
+            friend class svklib::renderer;
             struct BuildInfo {
                 VkPipelineShaderStageCreateInfo shaderStage{};
                 std::vector<VkDescriptorSetLayout> descriptorSetLayouts{};

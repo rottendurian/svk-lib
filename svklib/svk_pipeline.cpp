@@ -3,8 +3,6 @@
 
 #include "svk_pipeline.hpp"
 #include "svk_descriptor.hpp"
-#include "vulkan/vulkan_core.h"
-#include <memory>
 
 namespace svklib {
 
