@@ -2,11 +2,19 @@
 #define SVKLIB_PCH_HPP
 
 #include <cstdlib>
+#include <cstring>
 
 #include <stdexcept>
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include <memory>
+#include <cstdint>
+#include <algorithm> 
+#include <unordered_map>
+#include <map>
+#include <optional>
+#include <set>
 #include <memory>
 
 #include <deque>
@@ -22,7 +30,8 @@
 //#define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 
 // #define VMA_IMPLEMENTATION
 #include <vk_mem_alloc.h>

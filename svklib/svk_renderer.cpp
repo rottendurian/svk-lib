@@ -3,6 +3,11 @@
 
 #include "svk_renderer.hpp"
 
+#include "svk_swapchain.hpp"
+#include "svk_pipeline.hpp"
+
+#include "svk_window.hpp"
+
 namespace svklib {
 
 namespace queue {

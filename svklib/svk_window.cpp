@@ -2,7 +2,6 @@
 #define SVKLIB_WINDOW_CPP
 
 #include "svk_window.hpp"
-#include <stdexcept>
 
 namespace svklib {
 

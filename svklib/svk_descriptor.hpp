@@ -1,32 +1,32 @@
 #ifndef SVKLIB_DESCRIPTOR_HPP
 #define SVKLIB_DESCRIPTOR_HPP
 
-// #include "pch.hpp"
-#include <unordered_map>
+#include "svk_forward_declarations.hpp"
 
 namespace svklib {
 
 namespace descriptor {
 
-class allocator {
-    friend class pool;
-public:
-    struct pool {
-        svklib::descriptor::allocator* allocator{nullptr};
-        std::deque<VkDescriptorPool> usedPools;
-        VkDescriptorPool currentPool{VK_NULL_HANDLE};
+struct allocator_pool {
+    svklib::descriptor::allocator* allocator{nullptr};
+    std::deque<VkDescriptorPool> usedPools;
+    VkDescriptorPool currentPool{VK_NULL_HANDLE};
 
-        VkDescriptorSet allocate(VkDescriptorSetLayout layout);
-        pool(svklib::descriptor::allocator* allocator, VkDescriptorPool pool);
-        pool(const pool&) = delete;
-        void operator=(pool const&) = delete;
-        ~pool();
-        void returnPool();
-    };
+    VkDescriptorSet allocate(VkDescriptorSetLayout layout);
+    allocator_pool(svklib::descriptor::allocator* allocator, VkDescriptorPool pool);
+    allocator_pool(const allocator_pool&) = delete;
+    void operator=(allocator_pool const&) = delete;
+    ~allocator_pool();
+    void returnPool();
+};
+
+class allocator {
+    friend class allocator_pool;
+public:
     static allocator* init(VkDevice device);
     void cleanup();
     VkDevice getDevice();
-    pool getPool();
+    allocator_pool getPool();
     ~allocator();
 private:
     allocator();
@@ -41,12 +41,12 @@ private:
     std::deque<VkDescriptorPool> availablePools;
 
     VkDescriptorPool borrowPool();
-    void returnPool(pool& pool);
+    void returnPool(allocator_pool& pool);
 };
 
-namespace layout {
 
-class cache {
+
+class layout_cache {
 public:
     void init(VkDevice newDevice);
     void cleanup();
@@ -75,11 +75,11 @@ private:
     VkDevice device;
 };
 
-} // namespace layout
+
 
 class builder {
 public:
-	static builder begin(layout::cache* layoutCache, allocator::pool* pool);
+	static builder begin(layout_cache* layoutCache, allocator_pool* pool);
 
 	void bind_buffer(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags);
 	void bind_image(uint32_t binding, VkDescriptorType type, VkShaderStageFlags stageFlags);
@@ -97,8 +97,8 @@ private:
 
     VkDescriptorSetLayout layout;
 
-	layout::cache* cache;
-	allocator::pool* alloc;
+	layout_cache* cache;
+	allocator_pool* alloc;
 };
 
 } // namespace descriptor

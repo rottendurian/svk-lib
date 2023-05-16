@@ -1,17 +1,7 @@
 #ifndef SVKLIB_SHADER_HPP
 #define SVKLIB_SHADER_HPP
 
-// #include "pch.hpp"
-
-//shader compiler
 #include <glslang/Public/ShaderLang.h>
-#include <glslang/Public/ResourceLimits.h>
-#include <glslang/SPIRV/GlslangToSpv.h>
-
-//file saved date
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <ctime>
 
 namespace svklib {
 

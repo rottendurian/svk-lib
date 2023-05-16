@@ -2,8 +2,11 @@
 #define SVKLIB_SWAPCHAIN_CPP
 
 #include "svk_swapchain.hpp"
-#include "vulkan/vulkan_core.h"
-#include <stdexcept>
+
+#include "svk_instance.hpp"
+#include "svk_descriptor.hpp"
+#include "svk_threadpool.hpp"
+#include "svk_window.hpp"
 
 namespace svklib {
 

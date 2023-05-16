@@ -1,11 +1,9 @@
 #ifndef SVKLIB_SWAPCHAIN_HPP
 #define SVKLIB_SWAPCHAIN_HPP
 
-// #include "pch.hpp"
-#include "svk_instance.hpp"
+#include "svk_forward_declarations.hpp"
 
-#include <cstdint>
-#include <algorithm> 
+#include "svk_instance.hpp"
 
 namespace svklib {
 

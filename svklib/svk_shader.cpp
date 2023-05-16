@@ -3,8 +3,14 @@
 
 #include "svk_shader.hpp"
 #include "glslang/Public/ShaderLang.h"
-#include "vulkan/vulkan_core.h"
-#include <stdexcept>
+
+#include <glslang/Public/ResourceLimits.h>
+#include <glslang/SPIRV/GlslangToSpv.h>
+
+//file saved date
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <ctime>
 
 namespace svklib {
 

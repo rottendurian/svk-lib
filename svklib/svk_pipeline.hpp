@@ -1,10 +1,9 @@
 #ifndef SVKLIB_PIPELINE_HPP
 #define SVKLIB_PIPELINE_HPP
 
-#include "svk_swapchain.hpp"
-#include "svk_shader.hpp"
-#include "svk_threadpool.hpp"
-#include <vulkan/vulkan_core.h>
+#include "svk_forward_declarations.hpp"
+
+#include "svk_instance.hpp"
 
 namespace svklib {
 

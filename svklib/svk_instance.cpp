@@ -3,6 +3,10 @@
 
 #include "svk_instance.hpp"
 
+#include "svk_window.hpp"
+#include "svk_descriptor.hpp"
+#include "svk_threadpool.hpp"
+
 #include "svk_shader.hpp"
 
 #include <cstring>
@@ -23,19 +27,23 @@ static inline const char* const validationLayers[] = {
 };
 
 instance::instance(window &win,uint32_t apiVersion)
-    : win(win),apiVersion(apiVersion),requestedFeatures(nullptr)
+    : win(win),apiVersion(apiVersion),
+    requestedFeatures(nullptr)
 {
     init();
 }
 
 instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures)
-    :win(win),apiVersion(apiVersion),requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures))
+    :win(win),apiVersion(apiVersion),
+    requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures))
 {
     init();
 }
 
 instance::instance(window &win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures,std::vector<const char*> extensions)
-    :win(win),apiVersion(apiVersion),requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures)),requestedExtensions(extensions)
+    :win(win),apiVersion(apiVersion),
+    requestedFeatures(std::make_unique<VkPhysicalDeviceFeatures>(enabledFeatures)),
+    requestedExtensions(extensions)
 {
     init();
 }
@@ -1282,13 +1290,13 @@ void instance::destroySampler(VkSampler sampler)
 
 // Vulkan Memory Allocator end
 
-descriptor::allocator::pool instance::getDescriptorPool()
+descriptor::allocator_pool instance::getDescriptorPool()
 {
     return descriptorAllocator->getPool();
 }
 
 // Descriptor allocators
-descriptor::builder instance::createDescriptorBuilder(descriptor::allocator::pool* pool) {
+descriptor::builder instance::createDescriptorBuilder(descriptor::allocator_pool* pool) {
     return descriptor::builder::begin(&descriptorLayoutCache,pool);
 }
 

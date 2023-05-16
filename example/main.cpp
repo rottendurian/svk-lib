@@ -148,7 +148,7 @@ int main() {
             .buildScissor({0,0}, {swap.swapChainExtent.width,swap.swapChainExtent.height})
             .buildViewportState();
 
-        svklib::descriptor::allocator::pool descriptorPool{inst.getDescriptorPool()};
+        svklib::descriptor::allocator_pool descriptorPool{inst.getDescriptorPool()};
         svklib::descriptor::builder descriptorBuilder = inst.createDescriptorBuilder(&descriptorPool);
         descriptorBuilder.bind_buffer(0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_SHADER_STAGE_ALL);
         descriptorBuilder.bind_image(1,VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,VK_SHADER_STAGE_ALL);

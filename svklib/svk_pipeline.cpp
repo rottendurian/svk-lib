@@ -2,6 +2,12 @@
 #define SVKLIB_PIPELINE_CPP
 
 #include "svk_pipeline.hpp"
+
+#include "svk_swapchain.hpp"
+#include "svk_shader.hpp"
+#include "svk_threadpool.hpp"
+
+#include "svk_window.hpp"
 #include "svk_descriptor.hpp"
 
 namespace svklib {

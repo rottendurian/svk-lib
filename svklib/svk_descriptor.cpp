@@ -42,12 +42,12 @@ VkDevice allocator::getDevice()
     return device;
 }
 
-allocator::pool allocator::getPool()
+allocator_pool allocator::getPool()
 {
 	if (device == VK_NULL_HANDLE) {
 		throw std::runtime_error("allocator class was not initialized (device is VK_NULL_HANDLE)");
 	}
-    return pool(this, borrowPool());
+    return allocator_pool(this, borrowPool());
 }
 
 allocator::allocator() {}
@@ -96,7 +96,7 @@ VkDescriptorPool allocator::borrowPool()
 	return currentPool;
 }
 
-void allocator::returnPool(pool& pool) {
+void allocator::returnPool(allocator_pool& pool) {
 	vkResetDescriptorPool(device,pool.currentPool,0); //TODO might be worth it to just pop these off since I am using a deque instead of this optimization
 	for (auto& d_pool : pool.usedPools) {
 		vkResetDescriptorPool(device,d_pool,0);
@@ -113,7 +113,7 @@ void allocator::returnPool(pool& pool) {
 
 //DescriptorPool struct start
 
-VkDescriptorSet allocator::pool::allocate(VkDescriptorSetLayout layout) {
+VkDescriptorSet allocator_pool::allocate(VkDescriptorSetLayout layout) {
 	VkDescriptorSet set;
 	if (currentPool == VK_NULL_HANDLE){
 		currentPool = allocator->borrowPool();
@@ -162,15 +162,15 @@ VkDescriptorSet allocator::pool::allocate(VkDescriptorSetLayout layout) {
 	throw std::runtime_error("Failed to allocate descriptor set (after realloc)");
 }
 
-allocator::pool::pool(svklib::descriptor::allocator *allocator, VkDescriptorPool pool)
+allocator_pool::allocator_pool(svklib::descriptor::allocator *allocator, VkDescriptorPool pool)
 	: allocator(allocator), currentPool(pool)
 {}
 
-allocator::pool::~pool() {
+allocator_pool::~allocator_pool() {
 	returnPool();
 }
 
-void allocator::pool::returnPool()
+void allocator_pool::returnPool()
 {
 	allocator->returnPool(*this);
 }
@@ -179,22 +179,22 @@ void allocator::pool::returnPool()
 
 //allocator class end
 
-namespace layout {
+
 
 //layoutcache class start
 
-void cache::init(VkDevice newDevice){
+void layout_cache::init(VkDevice newDevice){
 	device = newDevice;
 }
 
-void cache::cleanup(){
+void layout_cache::cleanup(){
 	//delete every descriptor layout held
 	for (auto pair : layoutCache){
 		vkDestroyDescriptorSetLayout(device, pair.second, nullptr);
 	}
 }
 
-VkDescriptorSetLayout cache::create_descriptor_layout(VkDescriptorSetLayoutCreateInfo* info) {
+VkDescriptorSetLayout layout_cache::create_descriptor_layout(VkDescriptorSetLayoutCreateInfo* info) {
 	DescriptorLayoutInfo layoutinfo;
 	layoutinfo.bindings.reserve(info->bindingCount);
 	bool isSorted = true;
@@ -238,7 +238,7 @@ VkDescriptorSetLayout cache::create_descriptor_layout(VkDescriptorSetLayoutCreat
     }
 }
 
-bool cache::DescriptorLayoutInfo::operator==(const DescriptorLayoutInfo& other) const{
+bool layout_cache::DescriptorLayoutInfo::operator==(const DescriptorLayoutInfo& other) const{
 	if (other.bindings.size() != bindings.size()){
 		return false;
 	} else {
@@ -261,7 +261,7 @@ bool cache::DescriptorLayoutInfo::operator==(const DescriptorLayoutInfo& other) 
 	}
 }
 
-size_t cache::DescriptorLayoutInfo::hash() const {
+size_t layout_cache::DescriptorLayoutInfo::hash() const {
     using std::size_t;
     using std::hash;
 
@@ -281,11 +281,11 @@ size_t cache::DescriptorLayoutInfo::hash() const {
 
 //layoutcache class end
 
-} // namespace layout
+
 
 //builder class start
 
-builder builder::begin(layout::cache* layoutCache, allocator::pool* pool){
+builder builder::begin(layout_cache* layoutCache, allocator_pool* pool){
 
 	builder builder;
 

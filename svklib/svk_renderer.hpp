@@ -1,12 +1,9 @@
 #ifndef SVKLIB_RENDERER_HPP
 #define SVKLIB_RENDERER_HPP
 
+#include "svk_forward_declarations.hpp"
+
 #include "svk_instance.hpp"
-#include "svk_swapchain.hpp"
-#include "svk_pipeline.hpp"
-
-#include <functional>
-
 
 namespace svklib {
 

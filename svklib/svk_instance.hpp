@@ -1,38 +1,11 @@
 #ifndef SVKLIB_INSTANCE_HPP
 #define SVKLIB_INSTANCE_HPP
 
-#include "svk_window.hpp"
+#include "svk_forward_declarations.hpp"
+
 #include "svk_descriptor.hpp"
-#include "svk_threadpool.hpp"
-#include <vulkan/vulkan_core.h>
-
-#define VK_USE_PLATFORM_WIN32_KHR
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
-
-#include <optional>
-#include <set>
-#include <memory>
 
 namespace svklib {
-
-namespace graphics {
-    class pipeline;
-    struct IndexBufferInfo {
-        VkBuffer buff;
-        VkDeviceSize offset;
-        uint32_t count;
-        VkIndexType type;
-    };
-}
-namespace compute {
-    class pipeline;
-}
-class swapchain;
-class renderer;
-class instance;
 
 class instance {
     friend class swapchain;
@@ -262,12 +235,12 @@ public:
     //Vulkan Memory Allocator end
 public:
     //Descriptor Allocators
-    descriptor::allocator::pool getDescriptorPool();
-    descriptor::builder createDescriptorBuilder(descriptor::allocator::pool* pool);
+    descriptor::allocator_pool getDescriptorPool();
+    descriptor::builder createDescriptorBuilder(descriptor::allocator_pool* pool);
 
 private:
     descriptor::allocator* descriptorAllocator;
-    descriptor::layout::cache descriptorLayoutCache;
+    descriptor::layout_cache descriptorLayoutCache;
     //Descriptor Allocators end
 
 };
