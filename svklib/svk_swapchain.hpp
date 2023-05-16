@@ -16,6 +16,9 @@ public:
     swapchain(instance& inst, int framesInFlight, VkImageUsageFlagBits imageFlags,VkPresentModeKHR presentMode=VK_PRESENT_MODE_MAILBOX_KHR);
     swapchain(instance& inst, int framesInFlight, VkSampleCountFlagBits samples=VK_SAMPLE_COUNT_2_BIT, VkPresentModeKHR preferredPresentMode=VK_PRESENT_MODE_MAILBOX_KHR);
     ~swapchain();
+
+    swapchain(const swapchain&) = delete;
+    swapchain& operator=(const swapchain&) = delete;
     
 private:
     //references

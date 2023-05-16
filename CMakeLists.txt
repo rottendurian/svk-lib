@@ -6,11 +6,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 cmake_minimum_required(VERSION 3.22.0)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(_DEBUG)
 endif()
-
-set(SVKLIB_BUILD_EXAMPLE "ON")
 
 if(SVKLIB_BUILD_EXAMPLE STREQUAL "ON")
     project(vulkan)

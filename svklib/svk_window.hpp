@@ -11,6 +11,9 @@ public:
     window(const char* title, int width, int height);
     ~window();
 
+    window(const window&) = delete;
+    window& operator=(const window&) = delete;
+
     bool shouldClose();
     VkSurfaceKHR createSurface(VkInstance instance);
     bool frameBufferResized();

@@ -32,6 +32,7 @@ namespace compute {
 }
 class swapchain;
 class renderer;
+class instance;
 
 class instance {
     friend class swapchain;
@@ -41,6 +42,9 @@ public:
     instance(window& win,uint32_t apiVersion);
     instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures);
     instance(window& win,uint32_t apiVersion,VkPhysicalDeviceFeatures enabledFeatures,std::vector<const char*> extensions);
+
+    instance(const instance&) = delete;
+    instance& operator=(const instance&) = delete;
 
     void init();
     ~instance();

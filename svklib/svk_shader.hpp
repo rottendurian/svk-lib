@@ -21,6 +21,9 @@ public:
     // shader(std::initializer_list<const char*> paths, EShLanguage stage); //todo figure out why this doesn't work
     ~shader();
 
+    shader(const shader&) = delete;
+    shader& operator=(const shader&) = delete;
+
     static void setShaderVersion(uint32_t apiVersion);
 
     std::vector<uint32_t> getSpirvCode();
