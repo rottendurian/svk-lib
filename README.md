@@ -1,3 +1,5 @@
+This is being rewritten under the name of quix elsewhere on my github page, this is basically the old version
+
 A simple vulkan library with multi-threading support built in. 
 
 Built using vcpkg, setup.py will setup vcpkg for you
